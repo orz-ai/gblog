@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    {{ partial "head.html" . }}
+</head>
+<body>
+    {{ partial "header.html" . }}
+    <main class="main">
+        <div class="container">
+            <div class="posts">
+                {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
+                {{ range $paginator.Pages }}
+                <article class="post-card">
+                    <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+                    <div class="post-meta">
+                        <time>{{ .Date.Format .Site.Params.dateFormat }}</time>
+                    </div>
+                    <div class="post-summary">
+                        {{ .Summary }}
+                    </div>
+                    <a href="{{ .Permalink }}" class="read-more">阅读更多</a>
+                </article>
+                {{ end }}
+            </div>
+            {{ template "_internal/pagination.html" . }}
+        </div>
+    </main>
+    {{ partial "footer.html" . }}
+</body>
+</html>

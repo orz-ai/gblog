@@ -1,0 +1,12 @@
+name = "gblog"
+license = "MIT"
+licenselink = "https://github.com/yourusername/gblog/blob/master/LICENSE"
+description = "一个简洁现代的Hugo博客主题"
+homepage = "http://example.org/"
+tags = ["blog", "responsive", "personal"]
+features = ["blog", "responsive"]
+min_version = "0.80.0"
+
+[author]
+  name = "博主"
+  homepage = "http://example.org/"

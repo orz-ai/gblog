@@ -1,0 +1,51 @@
+baseURL = "http://example.org/"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+title = "我的博客"
+theme = "gblog"
+
+# 作者信息
+[author]
+  name = "博主"
+  email = "your-email@example.com"
+
+# 站点参数
+[params]
+  description = "个人博客网站"
+  keywords = ["博客", "技术", "生活"]
+  mainSections = ["posts"]
+  dateFormat = "2006-01-02"
+
+# 菜单配置
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "首页"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "posts"
+    name = "文章"
+    url = "/posts/"
+    weight = 2
+  [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about/"
+    weight = 3
+
+# 分页设置
+[pagination]
+  enable = true
+  perPage = 10
+
+# Markdown渲染设置
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = false
+  [markup.goldmark.renderer]
+    unsafe = true
