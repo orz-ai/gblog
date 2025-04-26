@@ -6,7 +6,7 @@
             </a>
             <div class="header-right">
                 <div class="search-box">
-                    <form action="/search" method="get">
+                    <form action="{{ "search" | relURL }}" method="get">
                         <input type="text" name="q" placeholder="搜索..." aria-label="搜索">
                         <button type="submit" aria-label="提交搜索"><i class="fas fa-search"></i></button>
                     </form>
