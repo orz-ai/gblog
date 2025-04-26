@@ -11,22 +11,114 @@
                 <header class="post-header">
                     <h1 class="post-title">{{ .Title }}</h1>
                     <div class="post-meta">
-                        <time>{{ .Date.Format .Site.Params.dateFormat }}</time>
-                        {{ with .Params.tags }}
-                        <div class="post-tags">
-                            {{ range . }}
-                            <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}/" class="tag">#{{ . }}</a>
+                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                            {{ .Date.Format .Site.Params.dateFormat }}
+                        </time>
+                        
+                        {{ with .Params.categories }}
+                        <span class="post-category">
+                            <i class="fas fa-folder"></i>
+                            {{ range first 1 . }}
+                            <a href="{{ "categories/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
                             {{ end }}
-                        </div>
+                        </span>
+                        {{ end }}
+                        
+                        {{ if isset .Params "author" }}
+                        <span class="post-author">
+                            <i class="fas fa-user"></i> {{ .Params.author }}
+                        </span>
+                        {{ end }}
+                        
+                        <span class="post-reading-time">
+                            <i class="fas fa-clock"></i> {{ .ReadingTime }} 分钟阅读
+                        </span>
+                    </div>
+                    
+                    {{ with .Params.tags }}
+                    <div class="post-tags">
+                        {{ range . }}
+                        <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
                         {{ end }}
                     </div>
+                    {{ end }}
                 </header>
+                
                 <div class="post-content">
                     {{ .Content }}
+                </div>
+                
+                <div class="post-footer">
+                    <div class="post-nav">
+                        {{ with .PrevInSection }}
+                        <a href="{{ .Permalink }}" class="post-nav-prev">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>{{ .Title }}</span>
+                        </a>
+                        {{ end }}
+                        
+                        {{ with .NextInSection }}
+                        <a href="{{ .Permalink }}" class="post-nav-next">
+                            <span>{{ .Title }}</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {{ end }}
+                    </div>
                 </div>
             </article>
         </div>
     </main>
+    
     {{ partial "footer.html" . }}
+    
+    <a href="#" class="back-to-top" id="backToTop" aria-label="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        // 返回顶部按钮
+        document.addEventListener('DOMContentLoaded', function() {
+            var backToTop = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('show');
+                } else {
+                    backToTop.classList.remove('show');
+                }
+            });
+            
+            backToTop.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            });
+            
+            // 仅为代码块添加复制按钮，不再添加行号
+            document.querySelectorAll('pre').forEach(function(pre) {
+                if (!pre.querySelector('.copy-button')) {
+                    let copyButton = document.createElement('button');
+                    copyButton.className = 'copy-button';
+                    copyButton.textContent = '复制';
+                    
+                    pre.appendChild(copyButton);
+                    
+                    copyButton.addEventListener('click', function() {
+                        // 获取代码内容时忽略行号
+                        let codeElement = pre.querySelector('code');
+                        let textToCopy = codeElement.textContent;
+                        
+                        navigator.clipboard.writeText(textToCopy).then(function() {
+                            copyButton.textContent = '已复制!';
+                            setTimeout(function() {
+                                copyButton.textContent = '复制';
+                            }, 2000);
+                        }).catch(function(err) {
+                            console.error('无法复制文本: ', err);
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

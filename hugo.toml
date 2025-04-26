@@ -29,10 +29,20 @@ theme = "gblog"
     url = "/posts/"
     weight = 2
   [[menu.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories/"
+    weight = 3
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 4
+  [[menu.main]]
     identifier = "about"
     name = "关于"
     url = "/about/"
-    weight = 3
+    weight = 5
 
 # 分页设置
 [pagination]
@@ -43,9 +53,11 @@ theme = "gblog"
 [markup]
   [markup.highlight]
     codeFences = true
-    guessSyntax = false
+    guessSyntax = true
     lineNos = true
-    lineNumbersInTable = true
+    lineNumbersInTable = false
+    style = "github"
+    tabWidth = 4
     noClasses = false
   [markup.goldmark.renderer]
     unsafe = true

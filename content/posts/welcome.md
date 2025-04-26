@@ -2,6 +2,7 @@
 title: "欢迎使用GBlog主题"
 date: 2024-01-01
 draft: false
+categories: ["博客教程"]
 tags: ["博客", "Hugo"]
 ---
 

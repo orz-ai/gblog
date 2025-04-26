@@ -5,21 +5,25 @@
 </head>
 <body>
     {{ partial "header.html" . }}
-    
     <main class="main">
         <div class="container">
-            {{ if .IsHome }}
-            <div class="hero-banner">
-                <div class="hero-content">
-                    <h2>欢迎来到{{ .Site.Title }}</h2>
-                    <p>分享知识，记录生活，探索世界</p>
-                </div>
+            <div class="list-header">
+                <h1 class="list-title">
+                    {{ if eq .Data.Singular "category" }}
+                    分类: {{ .Title }}
+                    {{ else if eq .Data.Singular "tag" }}
+                    标签: {{ .Title }}
+                    {{ else }}
+                    {{ .Title }}
+                    {{ end }}
+                </h1>
+                {{ if .Description }}
+                <div class="list-description">{{ .Description }}</div>
+                {{ end }}
             </div>
-            {{ end }}
             
             <div class="posts">
-                {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
-                {{ range $paginator.Pages }}
+                {{ range .Paginator.Pages }}
                 <article class="post-card">
                     <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
                     <div class="post-meta">
@@ -78,4 +82,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
