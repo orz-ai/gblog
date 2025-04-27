@@ -188,6 +188,14 @@ a {
     overflow: hidden;
 }
 
+/* 确保列表页中的所有图片都适应容器宽度 */
+.post-card img {
+    max-width: 100% !important;
+    height: auto !important;
+    width: auto;
+    object-fit: contain;
+}
+
 .post-card:before {
     content: '';
     position: absolute;
@@ -258,6 +266,23 @@ a {
     margin-bottom: 20px;
     line-height: 1.8;
     color: var(--text-light);
+    overflow: hidden;
+}
+
+.post-summary img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px;
+    margin: 1em 0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+    display: block;
+    object-fit: contain;
+    width: auto;
+}
+
+.post-summary img:hover {
+    transform: scale(1.01);
 }
 
 .read-more {
@@ -651,6 +676,15 @@ a {
     
     .post, .post-card {
         padding: 20px;
+    }
+    
+    /* 确保小屏幕设备上的图片也能适应容器宽度 */
+    .post-summary img,
+    .post-card img,
+    .post-content img {
+        max-width: 100% !important;
+        height: auto !important;
+        width: 100% !important; /* 在移动设备上强制使用100%宽度 */
     }
 
     .back-to-top {
