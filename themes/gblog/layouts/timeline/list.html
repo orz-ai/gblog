@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    {{ partial "head.html" . }}
+    <style>
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 3px;
+            background: linear-gradient(to bottom, #4a6cf7, #6a89ff, #4a6cf7);
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(74, 108, 247, 0.3);
+        }
+        
+        .timeline-items {
+            position: relative;
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 60px;
+            position: relative;
+            min-height: 100px;
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border: 4px solid #4a6cf7;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover .timeline-dot {
+            background: #4a6cf7;
+            transform: translateX(-50%) scale(1.2);
+            box-shadow: 0 0 0 6px rgba(74, 108, 247, 0.3);
+        }
+        
+        .timeline-content {
+            width: 45%;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            transform: rotate(45deg);
+            z-index: -1;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -10px;
+            border-right: none;
+            border-top: none;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -10px;
+            border-left: none;
+            border-bottom: none;
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+        
+        .timeline-date {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline-date i {
+            margin-right: 8px;
+            color: #4a6cf7;
+        }
+        
+        .timeline-title {
+            font-size: 18px;
+            margin: 0 0 15px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+        
+        .timeline-title a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 2px;
+        }
+        
+        .timeline-title a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4a6cf7;
+            transition: width 0.3s ease;
+        }
+        
+        .timeline-title a:hover {
+            color: #4a6cf7;
+        }
+        
+        .timeline-title a:hover::after {
+            width: 100%;
+        }
+        
+        .timeline-type {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .timeline-type.type-post {
+            background-color: rgba(74, 108, 247, 0.1);
+            color: #4a6cf7;
+        }
+        
+        .timeline-type.type-photo {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 55%;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 55%;
+        }
+        
+        .timeline-year {
+            position: relative;
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 50px;
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .timeline-year-label {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #4a6cf7, #6a89ff);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 30px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 30px;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px !important;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::before,
+            .timeline-item:nth-child(even) .timeline-content::before {
+                left: -10px;
+                border-left: none;
+                border-bottom: none;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-right: 0;
+            }
+            
+            .timeline-year-label {
+                font-size: 14px;
+                padding: 6px 16px;
+            }
+        }
+        
+        /* 添加滚动触发动画 */
+        .js-timeline-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .js-timeline-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 添加一些额外的样式美化 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #4a6cf7, #6a89ff);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    {{ partial "header.html" . }}
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1>{{ .Title }}</h1>
+                <p>{{ .Description }}</p>
+            </div>
+            
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-items">
+                    {{ $postPages := where .Site.RegularPages "Section" "posts" }}
+                    {{ $photoPages := where .Site.RegularPages "Section" "photos" }}
+                    {{ $allPages := append $postPages $photoPages }}
+                    {{ $sortedPages := sort $allPages "Date" "desc" }}
+                    
+                    {{ $currentYear := "" }}
+                    {{ range $sortedPages }}
+                        {{ $year := .Date.Format "2006" }}
+                        
+                        {{ if ne $currentYear $year }}
+                            <div class="timeline-year js-timeline-item">
+                                <div class="timeline-year-label">{{ $year }}</div>
+                            </div>
+                            {{ $currentYear = $year }}
+                        {{ end }}
+                        
+                        <div class="timeline-item js-timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                {{ if eq .Section "photos" }}
+                                <span class="timeline-type type-photo">
+                                    <i class="fas fa-camera"></i> 照片
+                                </span>
+                                {{ else }}
+                                <span class="timeline-type type-post">
+                                    <i class="fas fa-file-alt"></i> 文章
+                                </span>
+                                {{ end }}
+                                
+                                <h3 class="timeline-title">
+                                    <a href="{{ .Permalink }}">{{ .Title }}</a>
+                                </h3>
+                                
+                                <div class="timeline-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    {{ .Date.Format "2006-01-02" }}
+                                </div>
+                            </div>
+                        </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    {{ partial "footer.html" . }}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 滚动时触发动画
+            const timelineItems = document.querySelectorAll('.js-timeline-item');
+            
+            // 初始化第一个元素为可见
+            if (timelineItems.length > 0) {
+                timelineItems[0].classList.add('is-visible');
+            }
+            
+            // 检查元素是否在视口中
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+            
+            // 检查是否应该显示元素
+            function checkVisibility() {
+                let delay = 100;
+                
+                timelineItems.forEach(function(item, index) {
+                    if (isElementInViewport(item)) {
+                        setTimeout(function() {
+                            item.classList.add('is-visible');
+                        }, delay);
+                        delay += 100;
+                    }
+                });
+            }
+            
+            // 监听滚动事件
+            window.addEventListener('scroll', checkVisibility);
+            
+            // 初始化检查
+            checkVisibility();
+        });
+    </script>
+</body>
+</html> 
