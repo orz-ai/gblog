@@ -2,10 +2,29 @@
 <html lang="{{ .Site.LanguageCode }}">
 <head>
     {{ partial "head.html" . }}
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+    <!-- 确保Fuse.js加载 - 尝试不同的CDN源 -->
+    <script src="https://unpkg.com/fuse.js@6.6.2/dist/fuse.min.js"></script>
+    <!-- 备用加载 -->
     <script>
+    // 检查Fuse.js是否已加载，如果没有则尝试备用CDN
+    window.addEventListener('DOMContentLoaded', function() {
+        if (typeof Fuse === 'undefined') {
+            console.log('主要CDN加载失败，尝试加载备用CDN...');
+            var scriptElement = document.createElement('script');
+            scriptElement.src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js';
+            document.head.appendChild(scriptElement);
+        } else {
+            console.log('Fuse.js已成功加载');
+        }
+    });
+    
     // 添加全局变量，提供网站基础URL
     var siteBaseURL = "{{ .Site.BaseURL }}";
+    console.log("站点基础URL:", siteBaseURL);
+    
+    // 调试信息 - mainSections配置
+    var mainSections = {{ .Site.Params.mainSections | jsonify }};
+    console.log("mainSections配置:", mainSections);
     </script>
     <script src="{{ "js/search.js" | relURL }}"></script>
 </head>
@@ -49,15 +68,25 @@
                 window.scrollTo({top: 0, behavior: 'smooth'});
             });
             
-            // 启动搜索
-            initSearch();
+            // 添加调试信息
+            console.log("DOM已加载，准备初始化搜索...");
+            
+            // 延迟启动搜索，确保Fuse.js已加载
+            setTimeout(function() {
+                console.log("检查Fuse.js是否已加载:", typeof Fuse !== 'undefined');
+                initSearch();
+            }, 1000);
         });
     </script>
     
     <script>
+    // 创建搜索数据
     window.searchData = {
       pages: [
         {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+        {{ if eq (len $pages) 0 }}
+        // 调试信息：没有找到页面
+        {{ else }}
         {{ range $index, $page := $pages }}
           {{ if $index }}, {{ end }}
           {
@@ -70,8 +99,12 @@
             date: {{ $page.Date.Format "2006-01-02" | jsonify }}
           }
         {{ end }}
+        {{ end }}
       ]
     };
+    
+    // 添加日志信息
+    console.log("搜索数据已生成，共包含" + (window.searchData.pages ? window.searchData.pages.length : 0) + "个页面");
     </script>
 </body>
 </html> 

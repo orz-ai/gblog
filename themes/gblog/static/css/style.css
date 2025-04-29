@@ -998,6 +998,22 @@ a {
     border-radius: 3px;
 }
 
+/* 添加搜索信息和错误样式 */
+.search-info {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1rem;
+    background-color: rgba(74, 108, 247, 0.05);
+}
+
+.search-info.error {
+    background-color: rgba(255, 80, 80, 0.1);
+    color: #e53935;
+    border: 1px solid rgba(255, 80, 80, 0.2);
+}
+
 .search-form-container {
     max-width: 600px;
     margin: 0 auto;
@@ -1039,13 +1055,6 @@ a {
 
 .search-form-container button:hover {
     color: var(--primary-color);
-}
-
-.search-info {
-    text-align: center;
-    margin: 30px 0;
-    color: var(--text-light);
-    font-size: 1.1rem;
 }
 
 .search-results-list {
