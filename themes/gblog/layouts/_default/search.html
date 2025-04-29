@@ -2,7 +2,9 @@
 <html lang="{{ .Site.LanguageCode }}">
 <head>
     {{ partial "head.html" . }}
-    <!-- 确保Fuse.js加载 - 尝试不同的CDN源 -->
+    <!-- 尝试加载本地版 Fuse.js -->
+    <script src="{{ "js/lib/fuse.min.js" | relURL }}"></script>
+    <!-- 尝试加载CDN版 Fuse.js -->
     <script src="https://unpkg.com/fuse.js@6.6.2/dist/fuse.min.js"></script>
     <!-- 备用加载 -->
     <script>
@@ -39,6 +41,10 @@
                 
                 <div id="search-results">
                     <div class="search-info">正在搜索，请稍候...</div>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p>如果搜索不起作用，可以 <a href="/debug/" style="color: #4a6cf7;">查看调试页面</a> 来检查内容索引情况。</p>
                 </div>
             </div>
         </div>
