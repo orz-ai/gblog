@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    {{ partial "head.html" . }}
+    <style>
+        .photo-single {
+            display: flex;
+            flex-direction: column;
+            margin: 30px 0;
+        }
+        
+        .photo-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .photo-container img {
+            width: 100%;
+            display: block;
+        }
+        
+        .photo-header {
+            margin-bottom: 30px;
+        }
+        
+        .photo-header h1 {
+            margin-bottom: 10px;
+        }
+        
+        .photo-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .photo-meta span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .photo-meta i {
+            margin-right: 5px;
+        }
+        
+        .photo-description {
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+        
+        .photo-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .photo-tags .tag {
+            background: #f1f1f1;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .photo-tags .tag:hover {
+            background: #e0e0e0;
+        }
+        
+        .photo-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .photo-nav a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+        
+        .photo-nav a:hover {
+            color: #0066cc;
+        }
+        
+        .photo-nav-prev i {
+            margin-right: 10px;
+        }
+        
+        .photo-nav-next i {
+            margin-left: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .photo-container img {
+                max-height: 70vh;
+                object-fit: contain;
+            }
+        }
+    </style>
+</head>
+<body>
+    {{ partial "header.html" . }}
+    <main class="main">
+        <div class="container">
+            <article class="photo-single">
+                <header class="photo-header">
+                    <h1>{{ .Title }}</h1>
+                    <div class="photo-meta">
+                        <span>
+                            <i class="fas fa-calendar"></i>
+                            {{ .Date.Format .Site.Params.dateFormat }}
+                        </span>
+                        
+                        {{ if .Params.location }}
+                        <span>
+                            <i class="fas fa-map-marker-alt"></i>
+                            {{ .Params.location }}
+                        </span>
+                        {{ end }}
+                        
+                        {{ if .Params.camera }}
+                        <span>
+                            <i class="fas fa-camera"></i>
+                            {{ .Params.camera }}
+                        </span>
+                        {{ end }}
+                    </div>
+                    
+                    {{ with .Params.tags }}
+                    <div class="photo-tags">
+                        {{ range . }}
+                        <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </header>
+                
+                <div class="photo-container">
+                    <img src="{{ .Params.image }}" alt="{{ .Title }}">
+                </div>
+                
+                <div class="photo-description">
+                    {{ .Content }}
+                </div>
+                
+                <div class="photo-nav">
+                    {{ with .PrevInSection }}
+                    <a href="{{ .Permalink }}" class="photo-nav-prev">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>{{ .Title }}</span>
+                    </a>
+                    {{ else }}
+                    <div></div>
+                    {{ end }}
+                    
+                    {{ with .NextInSection }}
+                    <a href="{{ .Permalink }}" class="photo-nav-next">
+                        <span>{{ .Title }}</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    {{ else }}
+                    <div></div>
+                    {{ end }}
+                </div>
+            </article>
+        </div>
+    </main>
+    
+    {{ partial "footer.html" . }}
+</body>
+</html> 
