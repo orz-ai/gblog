@@ -3,31 +3,91 @@
 <head>
     {{ partial "head.html" . }}
     <style>
+        /* 页面标题样式 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            position: relative;
+        }
+        
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #2ecc71, #48e494);
+            border-radius: 3px;
+        }
+        
+        /* 照片墙网格样式 */
         .photo-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            grid-gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-gap: 25px;
             margin-top: 30px;
         }
         
         .photo-item {
             position: relative;
             overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #fff;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards;
+            animation-delay: calc(var(--animation-order) * 0.1s);
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .photo-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transform: translateY(-15px);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+        }
+        
+        .photo-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 75%; /* 4:3 宽高比 */
         }
         
         .photo-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
-            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .photo-item:hover img {
+            transform: scale(1.05);
         }
         
         .photo-caption {
@@ -35,29 +95,67 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0,0,0,0.7);
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
             color: white;
-            padding: 10px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            padding: 30px 20px 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
         }
         
         .photo-item:hover .photo-caption {
-            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .photo-info {
+            padding: 20px;
+            background: #fff;
         }
         
         .photo-title {
-            margin: 0;
-            font-size: 16px;
+            margin: 0 0 10px;
+            font-size: 18px;
             font-weight: 600;
+            color: #333;
         }
         
         .photo-date {
-            font-size: 12px;
-            margin-top: 5px;
-            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
         }
         
+        .photo-date i {
+            margin-right: 6px;
+            color: #2ecc71;
+        }
+        
+        /* 照片标签样式 */
+        .photo-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .photo-tag {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .photo-tag:hover {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        /* 模态框样式 */
         .photo-modal {
             display: none;
             position: fixed;
@@ -65,21 +163,92 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 50px;
+            padding: 0; /* 移除内边距，防止影响箭头位置 */
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .photo-modal.active {
             display: flex;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* 导航按钮完整样式 */
+        .modal-navigation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 5;
+            pointer-events: none; /* 整体区域不拦截事件 */
+        }
+        
+        #prevPhoto, #nextPhoto {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.7);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            pointer-events: auto; /* 按钮可点击 */
+            z-index: 20;
+        }
+        
+        #prevPhoto {
+            left: 5%;
+        }
+        
+        #nextPhoto {
+            right: 5%;
+        }
+        
+        #prevPhoto:hover, #nextPhoto:hover {
+            background: rgba(46, 204, 113, 0.9);
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        @media (max-width: 992px) {
+            #prevPhoto {
+                left: 30px;
+            }
+            
+            #nextPhoto {
+                right: 30px;
+            }
         }
         
         .modal-content {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 75%; /* 减小内容宽度，为箭头留出更多空间 */
+            max-height: 80%;
             position: relative;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
         }
         
         .modal-content img {
@@ -87,50 +256,140 @@
             max-height: 80vh;
             display: block;
             margin: 0 auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
         }
         
         .modal-caption {
             color: white;
-            padding: 15px 0;
+            padding: 20px 0;
             text-align: center;
+        }
+        
+        .modal-caption h3 {
+            font-size: 24px;
+            margin: 0 0 10px;
+            font-weight: 600;
+        }
+        
+        .modal-caption p {
+            margin: 15px 0;
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        .modal-info {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .modal-info span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .modal-info i {
+            margin-right: 5px;
         }
         
         .close-modal {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 20px;
+            right: 20px;
             color: white;
             font-size: 30px;
             cursor: pointer;
             z-index: 1001;
-        }
-        
-        .modal-nav {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-            transform: translateY(-50%);
-        }
-        
-        .modal-nav button {
-            background: rgba(255,255,255,0.3);
-            border: none;
-            border-radius: 50%;
             width: 40px;
             height: 40px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 50%;
             display: flex;
-            justify-content: center;
             align-items: center;
-            cursor: pointer;
-            color: white;
-            transition: background 0.3s ease;
+            justify-content: center;
+            transition: all 0.3s ease;
+            transform: rotate(0deg);
         }
         
-        .modal-nav button:hover {
-            background: rgba(255,255,255,0.5);
+        .close-modal:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        
+        /* 过滤器 */
+        .photo-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 30px;
+            background: #f5f5f5;
+            color: #555;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .photo-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-gap: 15px;
+            }
+            
+            .photo-caption {
+                padding: 20px 15px 15px;
+            }
+            
+            .photo-title {
+                font-size: 16px;
+            }
+            
+            .modal-content img {
+                max-height: 70vh;
+            }
+            
+            .modal-caption h3 {
+                font-size: 20px;
+            }
+            
+            .close-modal {
+                top: 15px;
+                right: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .photo-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 28px;
+            }
+        }
+        
+        .photo-modal.active .modal-content {
+            opacity: 1;
+            transform: scale(1);
         }
     </style>
 </head>
@@ -143,13 +402,45 @@
                 <p>{{ .Description }}</p>
             </div>
             
-            <div class="photo-gallery">
+            <!-- 添加过滤按钮 -->
+            <div class="photo-filters">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                {{ $tags := slice }}
                 {{ range .Pages }}
-                <div class="photo-item" data-url="{{ .Permalink }}">
-                    <img src="{{ .Params.image }}" alt="{{ .Title }}">
-                    <div class="photo-caption">
+                    {{ range .Params.tags }}
+                        {{ $tags = $tags | append . }}
+                    {{ end }}
+                {{ end }}
+                {{ range ($tags | uniq) }}
+                    <button class="filter-btn" data-filter="{{ . | urlize }}">{{ . }}</button>
+                {{ end }}
+            </div>
+            
+            <div class="photo-gallery">
+                {{ range $index, $page := .Pages }}
+                <div class="photo-item" data-url="{{ .Permalink }}" data-tags="{{ range .Params.tags }}{{ . | urlize }} {{ end }}" style="--animation-order: {{ $index }}">
+                    <div class="photo-image-wrapper">
+                        <img src="{{ .Params.image }}" alt="{{ .Title }}">
+                        <div class="photo-caption">
+                            <h3>{{ .Title }}</h3>
+                            {{ if .Params.location }}
+                            <span><i class="fas fa-map-marker-alt"></i> {{ .Params.location }}</span>
+                            {{ end }}
+                        </div>
+                    </div>
+                    <div class="photo-info">
                         <h3 class="photo-title">{{ .Title }}</h3>
-                        <div class="photo-date">{{ .Date.Format .Site.Params.dateFormat }}</div>
+                        <div class="photo-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ .Date.Format .Site.Params.dateFormat }}
+                        </div>
+                        {{ with .Params.tags }}
+                        <div class="photo-tags">
+                            {{ range . }}
+                            <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}/" class="photo-tag">{{ . }}</a>
+                            {{ end }}
+                        </div>
+                        {{ end }}
                     </div>
                 </div>
                 {{ end }}
@@ -162,12 +453,16 @@
                     <div class="modal-caption">
                         <h3 id="modalTitle"></h3>
                         <p id="modalDescription"></p>
-                        <span id="modalDate"></span>
+                        <div class="modal-info">
+                            <span id="modalDate"><i class="fas fa-calendar-alt"></i> <span></span></span>
+                            <span id="modalLocation"><i class="fas fa-map-marker-alt"></i> <span></span></span>
+                            <span id="modalCamera"><i class="fas fa-camera"></i> <span></span></span>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-nav">
-                    <button id="prevPhoto"><i class="fas fa-chevron-left"></i></button>
-                    <button id="nextPhoto"><i class="fas fa-chevron-right"></i></button>
+                <div class="modal-navigation">
+                    <button id="prevPhoto" aria-label="上一张照片"><i class="fas fa-chevron-left"></i></button>
+                    <button id="nextPhoto" aria-label="下一张照片"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
@@ -182,17 +477,71 @@
             const modalImage = document.getElementById('modalImage');
             const modalTitle = document.getElementById('modalTitle');
             const modalDescription = document.getElementById('modalDescription');
-            const modalDate = document.getElementById('modalDate');
+            const modalDate = document.querySelector('#modalDate span');
+            const modalLocation = document.querySelector('#modalLocation span');
+            const modalCamera = document.querySelector('#modalCamera span');
+            const modalLocationContainer = document.getElementById('modalLocation');
+            const modalCameraContainer = document.getElementById('modalCamera');
             const closeModal = document.querySelector('.close-modal');
             const prevButton = document.getElementById('prevPhoto');
             const nextButton = document.getElementById('nextPhoto');
+            const filterButtons = document.querySelectorAll('.filter-btn');
             
             let currentIndex = 0;
+            let filteredItems = [...photoItems];
+            
+            // 确保导航按钮正确显示
+            function checkNavButtons() {
+                if (filteredItems.length <= 1) {
+                    prevButton.style.display = 'none';
+                    nextButton.style.display = 'none';
+                } else {
+                    prevButton.style.display = 'flex';
+                    nextButton.style.display = 'flex';
+                }
+            }
+            
+            // 过滤功能
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // 更新按钮状态
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 过滤照片
+                    photoItems.forEach(item => {
+                        if (filter === 'all') {
+                            item.style.display = 'block';
+                        } else {
+                            const tags = item.getAttribute('data-tags');
+                            if (tags && tags.includes(filter)) {
+                                item.style.display = 'block';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        }
+                    });
+                    
+                    // 更新可见照片列表
+                    updateFilteredItems();
+                });
+            });
+            
+            // 更新筛选后的照片列表
+            function updateFilteredItems() {
+                filteredItems = [...photoItems].filter(item => 
+                    window.getComputedStyle(item).display !== 'none'
+                );
+                checkNavButtons();
+            }
             
             // 打开模态框
-            photoItems.forEach((item, index) => {
+            photoItems.forEach((item) => {
                 item.addEventListener('click', function() {
-                    currentIndex = index;
+                    updateFilteredItems();
+                    currentIndex = filteredItems.indexOf(item);
                     updateModal();
                     photoModal.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -216,13 +565,13 @@
             // 上一张/下一张
             prevButton.addEventListener('click', function(e) {
                 e.stopPropagation();
-                currentIndex = (currentIndex - 1 + photoItems.length) % photoItems.length;
+                currentIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
                 updateModal();
             });
             
             nextButton.addEventListener('click', function(e) {
                 e.stopPropagation();
-                currentIndex = (currentIndex + 1) % photoItems.length;
+                currentIndex = (currentIndex + 1) % filteredItems.length;
                 updateModal();
             });
             
@@ -234,24 +583,24 @@
                     photoModal.classList.remove('active');
                     document.body.style.overflow = '';
                 } else if (e.key === 'ArrowLeft') {
-                    currentIndex = (currentIndex - 1 + photoItems.length) % photoItems.length;
+                    currentIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
                     updateModal();
                 } else if (e.key === 'ArrowRight') {
-                    currentIndex = (currentIndex + 1) % photoItems.length;
+                    currentIndex = (currentIndex + 1) % filteredItems.length;
                     updateModal();
                 }
             });
             
             function updateModal() {
-                const item = photoItems[currentIndex];
+                const item = filteredItems[currentIndex];
                 const img = item.querySelector('img');
                 const title = item.querySelector('.photo-title').textContent;
-                const date = item.querySelector('.photo-date').textContent;
+                const date = item.querySelector('.photo-date').textContent.trim();
                 const url = item.getAttribute('data-url');
                 
                 modalImage.src = img.src;
                 modalTitle.textContent = title;
-                modalDate.textContent = date;
+                modalDate.textContent = date.replace(/.*\s/, '');  // 仅保留日期部分
                 
                 // 获取照片的详细描述（如果有）
                 if (url) {
@@ -262,13 +611,64 @@
                             const doc = parser.parseFromString(html, 'text/html');
                             const description = doc.querySelector('.photo-description');
                             modalDescription.textContent = description ? description.textContent.trim() : '';
+                            
+                            // 获取位置和相机信息
+                            const location = doc.querySelector('[itemprop="contentLocation"]') || 
+                                            doc.querySelector('.photo-meta [data-location]');
+                            const camera = doc.querySelector('[itemprop="tool"]') || 
+                                        doc.querySelector('.photo-meta [data-camera]');
+                            
+                            // 设置位置
+                            if (location) {
+                                modalLocationContainer.style.display = 'flex';
+                                modalLocation.textContent = location.textContent.trim();
+                            } else {
+                                modalLocationContainer.style.display = 'none';
+                            }
+                            
+                            // 设置相机
+                            if (camera) {
+                                modalCameraContainer.style.display = 'flex';
+                                modalCamera.textContent = camera.textContent.trim();
+                            } else {
+                                modalCameraContainer.style.display = 'none';
+                            }
                         })
                         .catch(error => {
                             console.error('Error fetching photo details:', error);
                             modalDescription.textContent = '';
+                            modalLocationContainer.style.display = 'none';
+                            modalCameraContainer.style.display = 'none';
                         });
                 }
             }
+            
+            // 初始化
+            updateFilteredItems();
+            
+            // 防止模态框内按钮点击事件冒泡
+            prevButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            nextButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // 添加鼠标滚轮滚动功能
+            photoModal.addEventListener('wheel', function(e) {
+                e.preventDefault(); // 防止页面滚动
+                
+                if (e.deltaY > 0) {
+                    // 向下滚动，显示下一张
+                    currentIndex = (currentIndex + 1) % filteredItems.length;
+                } else {
+                    // 向上滚动，显示上一张
+                    currentIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
+                }
+                
+                updateModal();
+            });
         });
     </script>
 </body>
