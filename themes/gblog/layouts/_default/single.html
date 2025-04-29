@@ -93,18 +93,18 @@
                 window.scrollTo({top: 0, behavior: 'smooth'});
             });
             
-            // 仅为代码块添加复制按钮，不再添加行号
-            document.querySelectorAll('pre').forEach(function(pre) {
-                if (!pre.querySelector('.copy-button')) {
+            // 增强代码块功能
+            document.querySelectorAll('.highlight').forEach(function(highlight) {
+                // 添加复制按钮
+                if (!highlight.querySelector('.copy-button')) {
                     let copyButton = document.createElement('button');
                     copyButton.className = 'copy-button';
                     copyButton.textContent = '复制';
                     
-                    pre.appendChild(copyButton);
+                    highlight.appendChild(copyButton);
                     
                     copyButton.addEventListener('click', function() {
-                        // 获取代码内容时忽略行号
-                        let codeElement = pre.querySelector('code');
+                        let codeElement = highlight.querySelector('code');
                         let textToCopy = codeElement.textContent;
                         
                         navigator.clipboard.writeText(textToCopy).then(function() {
@@ -116,6 +116,25 @@
                             console.error('无法复制文本: ', err);
                         });
                     });
+                }
+                
+                // 提取语言信息并添加为内部标签
+                let codeClass = highlight.querySelector('code').className;
+                let langMatch = codeClass.match(/language-(\w+)/);
+                
+                if (langMatch && langMatch[1]) {
+                    let lang = langMatch[1];
+                    // 删除可能已存在的语言标识
+                    let existingIndicator = highlight.querySelector('.language-indicator');
+                    if (existingIndicator) {
+                        existingIndicator.remove();
+                    }
+                    
+                    // 创建并添加新的语言标识在代码块内部的左上角
+                    let langIndicator = document.createElement('div');
+                    langIndicator.className = 'language-indicator';
+                    langIndicator.textContent = lang;
+                    highlight.insertBefore(langIndicator, highlight.firstChild);
                 }
             });
         });

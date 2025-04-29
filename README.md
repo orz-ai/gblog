@@ -73,3 +73,17 @@ hugo server -D
 
 - `themes/gblog/layouts/photos/list.html`: 照片墙列表页面模板
 - `themes/gblog/layouts/photos/single.html`: 照片详情页面模板 
+
+
+```tom
+  [[menu.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories/"
+    weight = 5
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 6
+```

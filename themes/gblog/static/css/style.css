@@ -122,10 +122,15 @@ a {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 30px;
+    width: 30%;
     height: 3px;
     background: var(--gradient-bg);
     border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.logo:hover h1:after {
+    width: 100%;
 }
 
 .nav {
@@ -149,15 +154,14 @@ a {
     width: 0;
     height: 2px;
     bottom: 0;
-    left: 50%;
+    left: 0;
     background-color: var(--primary-color);
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
+    transition: width 0.3s ease;
 }
 
 .nav-link:hover:after,
 .nav-link.active:after {
-    width: 80%;
+    width: 100%;
 }
 
 .nav-link:hover {
@@ -400,28 +404,28 @@ a {
 }
 
 .post-content code {
-    background-color: #f5f7f9;
     padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-size: 0.9em;
+    margin: 0;
+    background-color: rgba(175, 184, 193, 0.2);
+    border-radius: 4px;
     font-family: 'Fira Code', monospace;
+    font-size: 85%;
 }
 
 .post-content pre {
-    background-color: #f5f7f9;
-    padding: 1em;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 1.5em 0;
-    border-left: 4px solid var(--primary-color);
-    position: relative;
+    padding: 16px;
+    overflow: auto;
+    background-color: #f6f8fa;
+    border-radius: 6px;
+    line-height: 1.45;
+    margin-bottom: 1em;
 }
 
 .post-content pre code {
-    background-color: transparent;
     padding: 0;
+    background-color: transparent;
     font-family: 'Fira Code', monospace;
-    tab-size: 4;
+    font-size: 14px;
 }
 
 /* Hugo原生行号样式优化 */
@@ -846,36 +850,6 @@ a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-/* 代码复制按钮 */
-pre {
-    position: relative;
-}
-
-.copy-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    padding: 5px 10px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #555;
-    border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    opacity: 0;
-    z-index: 10;
-}
-
-pre:hover .copy-button {
-    opacity: 1;
-}
-
-.copy-button:hover {
-    background-color: rgba(74, 108, 247, 0.1);
-    color: var(--primary-color);
 }
 
 /* 列表页面样式 */

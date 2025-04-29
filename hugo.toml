@@ -38,21 +38,12 @@ theme = "gblog"
     name = "时间线"
     url = "/timeline/"
     weight = 4
-  [[menu.main]]
-    identifier = "categories"
-    name = "分类"
-    url = "/categories/"
-    weight = 5
-  [[menu.main]]
-    identifier = "tags"
-    name = "标签"
-    url = "/tags/"
-    weight = 6
+
   [[menu.main]]
     identifier = "about"
     name = "关于"
     url = "/about/"
-    weight = 7
+    weight = 5
 
 # 分页设置
 [pagination]
