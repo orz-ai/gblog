@@ -62,8 +62,8 @@
                     {{ $mainSectionPages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
                     <p>主要内容区域页面数量: <span class="highlight">{{ len $mainSectionPages }}</span></p>
                     
-                    {{ range $sectionName, $sectionPages := .Site.RegularPages.GroupBySection }}
-                    <p>{{ $sectionName }} 区域页面数量: <span class="highlight">{{ len $sectionPages }}</span></p>
+                    {{ range $sectionName, $sectionPages := .Site.RegularPages.GroupBy "Section" }}
+                    <p>{{ $sectionName }} 区域页面数量: <span class="highlight">{{ len $sectionPages.Pages }}</span></p>
                     {{ end }}
                 </div>
             </div>
@@ -113,4 +113,4 @@
     
     {{ partial "footer.html" . }}
 </body>
-</html> 
+</html>

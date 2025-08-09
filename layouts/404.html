@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    {{ partial "head.html" . }}
+    <title>404 页面未找到 - {{ .Site.Title }}</title>
+    <meta name="robots" content="noindex, follow">
+</head>
+<body>
+    {{ partial "header.html" . }}
+    
+    <main class="main">
+        <div class="container">
+            <div class="error-page">
+                <h1>404</h1>
+                <h2>页面未找到</h2>
+                <p>抱歉，您访问的页面不存在或已被移动。</p>
+                <a href="{{ "/" | relURL }}" class="btn">返回首页</a>
+            </div>
+        </div>
+    </main>
+    
+    {{ partial "footer.html" . }}
+</body>
+</html>

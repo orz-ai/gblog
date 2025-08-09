@@ -4,6 +4,11 @@ defaultContentLanguage = "zh-cn"
 title = "我的博客"
 theme = "gblog"
 
+# SEO设置
+enableRobotsTXT = true
+enableSitemap = true
+canonifyURLs = true
+
 # 作者信息
 [author]
   name = "博主"
@@ -11,10 +16,23 @@ theme = "gblog"
 
 # 站点参数
 [params]
-  description = "个人博客网站"
-  keywords = ["博客", "技术", "生活"]
+  description = "个人博客网站 - 分享技术、知识和生活感悟"
+  keywords = ["博客", "技术", "生活", "编程", "Go语言", "Hugo"]
   mainSections = ["posts"]
   dateFormat = "2006-01-02"
+  
+  # SEO相关设置
+  images = ["images/hero-bg.jpg"] # 默认社交分享图片
+  # 社交媒体链接
+  [params.social]
+    github = "https://github.com/yourusername"
+    twitter = "https://twitter.com/yourusername"
+    weibo = "https://weibo.com/yourusername"
+  
+  # 文章设置
+  [params.post]
+    featuredImageField = "featuredImage" # 特色图片字段名
+    readingTime = true # 显示阅读时间
 
 # 菜单配置
 [menu]

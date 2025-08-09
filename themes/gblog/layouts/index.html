@@ -42,7 +42,7 @@
                         {{ end }}
                     </div>
                     <div class="post-summary">
-                        {{ .Summary }}
+                        {{ .Content | truncate 300 | safeHTML }}
                     </div>
                     <a href="{{ .Permalink }}" class="read-more">阅读更多</a>
                 </article>
