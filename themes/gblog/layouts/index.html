@@ -18,10 +18,19 @@
             {{ end }}
             
             <div class="posts">
-                {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
+                {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+                {{ $pinnedPages := where $pages "Params.pinned" true }}
+                {{ $regularPages := where $pages "Params.pinned" "!=" true }}
+                {{ $sortedPinnedPages := sort $pinnedPages "Params.weight" "asc" }}
+                {{ $sortedRegularPages := sort $regularPages "Date" "desc" }}
+                {{ $allPages := union $sortedPinnedPages $sortedRegularPages }}
+                {{ $paginator := .Paginate $allPages }}
                 {{ range $paginator.Pages }}
-                <article class="post-card">
-                    <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+                <article class="post-card{{ if .Params.pinned }} pinned{{ end }}">
+                    <h2 class="post-title">
+                        {{ if .Params.pinned }}<i class="fas fa-thumbtack pinned-icon" title="置顶文章"></i>{{ end }}
+                        <a href="{{ .Permalink }}">{{ .Title }}</a>
+                    </h2>
                     <div class="post-meta">
                         <time>{{ .Date.Format .Site.Params.dateFormat }}</time>
                         {{ with .Params.categories }}

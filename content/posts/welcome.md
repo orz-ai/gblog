@@ -4,6 +4,8 @@ date: 2024-01-01
 draft: false
 categories: ["博客教程"]
 tags: ["博客", "Hugo"]
+pinned: true
+weight: 1
 ---
 
 欢迎使用GBlog主题！这是一个简洁现代的Hugo博客主题，专为中文博客设计。
