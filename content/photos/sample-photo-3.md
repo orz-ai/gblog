@@ -2,7 +2,7 @@
 title: "花卉特写"
 date: 2023-10-05
 draft: false
-image: "https://picsum.photos/id/106/800/600"
+image: "https://orz.ai/wp-content/uploads/2024/11/1731220448-微信图片_20240107164211-副本.jpg"
 location: "花园"
 camera: "Nikon Z6"
 tags: ["自然", "花卉", "特写"]

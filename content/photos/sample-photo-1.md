@@ -2,7 +2,7 @@
 title: "美丽风景"
 date: 2023-08-15
 draft: false
-image: "https://picsum.photos/id/28/800/600"
+image: "https://orz.ai/wp-content/uploads/2024/11/1731220438-street-5932230_1280.jpg"
 location: "山水之间"
 camera: "Canon EOS 5D Mark IV"
 tags: ["风景", "自然"]

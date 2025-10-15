@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode }}">
+
 <head>
     {{ partial "head.html" . }}
     <!-- 尝试加载本地版 Fuse.js -->
-    <script src="{{ "js/lib/fuse.min.js" | relURL }}"></script>
+    <script src="{{ " js/lib/fuse.min.js" | relURL }}"></script>
     <!-- 尝试加载CDN版 Fuse.js -->
     <script src="https://unpkg.com/fuse.js@6.6.2/dist/fuse.min.js"></script>
     <!-- 备用加载 -->
     <script>
-    // 检查Fuse.js是否已加载，如果没有则尝试备用CDN
-    window.addEventListener('DOMContentLoaded', function() {
-        if (typeof Fuse === 'undefined') {
-            console.log('主要CDN加载失败，尝试加载备用CDN...');
-            var scriptElement = document.createElement('script');
-            scriptElement.src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js';
-            document.head.appendChild(scriptElement);
-        } else {
-            console.log('Fuse.js已成功加载');
-        }
-    });
-    
-    // 添加全局变量，提供网站基础URL
-    var siteBaseURL = "{{ .Site.BaseURL }}";
-    console.log("站点基础URL:", siteBaseURL);
-    
-    // 调试信息 - mainSections配置
-    var mainSections = {{ .Site.Params.mainSections | jsonify }};
-    console.log("mainSections配置:", mainSections);
+        // 检查Fuse.js是否已加载，如果没有则尝试备用CDN
+        window.addEventListener('DOMContentLoaded', function () {
+            if (typeof Fuse === 'undefined') {
+                console.log('主要CDN加载失败，尝试加载备用CDN...');
+                var scriptElement = document.createElement('script');
+                scriptElement.src = 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js';
+                document.head.appendChild(scriptElement);
+            } else {
+                console.log('Fuse.js已成功加载');
+            }
+        });
+
+        // 添加全局变量，提供网站基础URL
+        var siteBaseURL = "{{ .Site.BaseURL }}";
+        console.log("站点基础URL:", siteBaseURL);
+
+        // 调试信息 - mainSections配置
+        var mainSections = {{ .Site.Params.mainSections | jsonify }};
+        console.log("mainSections配置:", mainSections);
     </script>
-    <script src="{{ "js/search.js" | relURL }}"></script>
+    <script src="{{ " js/search.js" | relURL }}"></script>
 </head>
+
 <body>
     {{ partial "header.html" . }}
     <main class="main">
@@ -38,77 +40,78 @@
                 <div class="search-header">
                     <h1 class="search-title">搜索结果</h1>
                 </div>
-                
+
                 <div id="search-results">
                     <div class="search-info">正在搜索，请稍候...</div>
                 </div>
-                
+
 
             </div>
         </div>
     </main>
-    
+
     {{ partial "footer.html" . }}
-    
+
     <a href="#" class="back-to-top" id="backToTop" aria-label="返回顶部">
         <i class="fas fa-arrow-up"></i>
     </a>
 
     <script>
         // 返回顶部按钮
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var backToTop = document.getElementById('backToTop');
-            
-            window.addEventListener('scroll', function() {
+
+            window.addEventListener('scroll', function () {
                 if (window.pageYOffset > 300) {
                     backToTop.classList.add('show');
                 } else {
                     backToTop.classList.remove('show');
                 }
             });
-            
-            backToTop.addEventListener('click', function(e) {
+
+            backToTop.addEventListener('click', function (e) {
                 e.preventDefault();
-                window.scrollTo({top: 0, behavior: 'smooth'});
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
-            
+
             // 添加调试信息
             console.log("DOM已加载，准备初始化搜索...");
-            
+
             // 延迟启动搜索，确保Fuse.js已加载
-            setTimeout(function() {
+            setTimeout(function () {
                 console.log("检查Fuse.js是否已加载:", typeof Fuse !== 'undefined');
                 initSearch();
             }, 1000);
         });
     </script>
-    
+
     <script>
-    // 创建搜索数据
-    window.searchData = {
-      pages: [
-        {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
+        // 创建搜索数据
+        window.searchData = {
+            pages: [
+                {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
         {{ if eq (len $pages) 0 }}
         // 调试信息：没有找到页面
         {{ else }}
         {{ range $index, $page := $pages }}
-          {{ if $index }}, {{ end }}
-          {
+        {{ if $index }},{{ end }}
+        {
             title: {{ $page.Title | jsonify }},
             content: {{ $page.Plain | jsonify }},
             url: "{{ $page.Permalink }}",
-            relUrl: "{{ $page.RelPermalink }}",
-            categories: {{ if $page.Params.categories }}{{ $page.Params.categories | jsonify }}{{ else }}[]{{ end }},
+                relUrl: "{{ $page.RelPermalink }}",
+                    categories: {{ if $page.Params.categories }}{{ $page.Params.categories | jsonify }}{{ else }}[]{{ end }},
             tags: {{ if $page.Params.tags }}{{ $page.Params.tags | jsonify }}{{ else }}[]{{ end }},
             date: {{ $page.Date.Format "2006-01-02" | jsonify }}
-          }
+        }
         {{ end }}
         {{ end }}
       ]
     };
-    
-    // 添加日志信息
-    console.log("搜索数据已生成，共包含" + (window.searchData.pages ? window.searchData.pages.length : 0) + "个页面");
+
+        // 添加日志信息
+        console.log("搜索数据已生成，共包含" + (window.searchData.pages ? window.searchData.pages.length : 0) + "个页面");
     </script>
 </body>
+
 </html>

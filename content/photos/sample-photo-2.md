@@ -2,7 +2,7 @@
 title: "城市夜景"
 date: 2023-09-20
 draft: false
-image: "https://picsum.photos/id/42/800/600"
+image: "https://orz.ai/wp-content/uploads/2024/11/1731220426-clouds-4215608_1280.jpg"
 location: "都市中心"
 camera: "Sony A7III"
 tags: ["城市", "夜景", "建筑"]
