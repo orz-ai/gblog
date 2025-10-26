@@ -1,91 +1,183 @@
+
+
+# GBlog - Hugo 个人博客主题
+
 ![预览](preview.png)
 
-# 照片墙功能使用说明
+一个基于 Hugo 的现代化个人博客主题，集成了文章发布、照片墙、时间线等功能。
 
-本博客集成了照片墙功能，用于展示和分享照片。
+## 特性
 
-## 使用方法
+- **文章管理** - 支持 Markdown 格式文章发布
+- **照片墙** - 优雅的照片展示和管理功能
+- **时间线** - 按时间顺序展示文章和照片
+- **搜索功能** - 全站内容搜索
+- **响应式设计** - 完美适配各种设备
+- **现代化UI** - 简洁美观的用户界面
+- **快速加载** - 优化的性能表现
 
-### 1. 添加照片内容
+## 快速开始
 
-使用以下命令创建新的照片内容：
+### 环境要求
 
+- [Hugo](https://gohugo.io/) v0.100.0 或更高版本
+- Git
+
+### 安装步骤
+
+1. **克隆项目**
+   ```bash
+   git clone https://github.com/yourusername/gblog.git
+   cd gblog
+   ```
+
+2. **启动开发服务器**
+   ```bash
+   hugo server -D
+   ```
+
+3. **访问网站**
+   打开浏览器访问 http://localhost:1313
+
+## 使用指南
+
+### 发布文章
+
+创建新文章：
 ```bash
-hugo new photos/my-photo-name.md
+hugo new posts/my-new-post.md
 ```
 
-这将创建一个新的Markdown文件，包含以下前置元数据：
+编辑生成的 Markdown 文件，添加内容后保存即可。
 
-```yaml
+### 添加照片
+
+1. **创建照片内容**
+   ```bash
+   hugo new photos/my-photo.md
+   ```
+
+2. **编辑照片信息**
+   ```yaml
+   ---
+   title: "照片标题"
+   date: 2024-01-01T12:00:00+08:00
+   draft: false
+   image: "/images/photos/my-photo.jpg"
+   location: "拍摄地点"
+   camera: "相机型号"
+   tags: ["标签1", "标签2"]
+   ---
+   
+   照片描述内容...
+   ```
+
+3. **上传照片文件**
+   将照片文件放置在 `static/images/photos/` 目录下
+
+### 自定义配置
+
+编辑 `hugo.toml` 文件来自定义网站配置：
+
+```toml
+baseURL = "https://yourdomain.com/"
+title = "你的博客标题"
+theme = "gblog"
+
+[author]
+  name = "你的名字"
+  email = "your-email@example.com"
+
+[params]
+  description = "博客描述"
+  keywords = ["关键词1", "关键词2"]
+```
+
+## 项目结构
+
+```
+gblog/
+├── archetypes/          # 内容模板
+├── content/             # 网站内容
+│   ├── posts/          # 文章目录
+│   ├── photos/         # 照片目录
+│   └── timeline/       # 时间线页面
+├── static/             # 静态资源
+│   └── images/         # 图片资源
+├── themes/gblog/       # 主题文件
+├── hugo.toml          # Hugo 配置文件
+└── README.md          # 项目说明
+```
+
+## 功能详解
+
+### 照片墙功能
+
+- 网格式照片展示
+- 点击查看大图和详情
+- 键盘导航支持（左右箭头）
+- 照片元数据展示（地点、相机等）
+- 标签分类功能
+
+### 时间线功能
+
+- 按年份分组展示
+- 文章和照片混合显示
+- 可折叠的年份节点
+- 优雅的时间轴设计
+
+### 搜索功能
+
+- 全站内容搜索
+- 实时搜索结果
+- 高亮匹配内容
+
+## 自定义开发
+
+### 修改主题样式
+
+主要样式文件位于：
+- `themes/gblog/static/css/style.css`
+
+### 自定义模板
+
+模板文件位于：
+- `themes/gblog/layouts/` - 页面模板
+- `themes/gblog/layouts/partials/` - 组件模板
+
+## 部署
+
+### GitHub Pages
+
+1. 在 GitHub 创建仓库
+2. 推送代码到仓库
+3. 在仓库设置中启用 GitHub Pages
+4. 选择 GitHub Actions 作为构建源
+
+### Netlify
+
+1. 连接 GitHub 仓库到 Netlify
+2. 设置构建命令：`hugo --minify`
+3. 设置发布目录：`public`
+
+### Vercel
+
+1. 导入 GitHub 仓库到 Vercel
+2. Vercel 会自动检测 Hugo 项目并配置构建设置
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request 来改进这个项目！
+
+## 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 联系方式
+
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: your-email@example.com
+
 ---
-title: "My Photo Name"
-date: [当前日期时间]
-draft: false
-image: "/images/photos/my-photo-name.jpg"
-location: ""
-camera: ""
-tags: []
----
 
-在此处添加照片描述...
-```
-
-### 2. 编辑照片内容
-
-修改生成的Markdown文件，填写以下信息：
-
-- `title`: 照片标题
-- `date`: 拍摄日期或发布日期
-- `image`: 照片文件路径（默认为`/images/photos/[文件名].jpg`）
-- `location`: 拍摄地点（可选）
-- `camera`: 相机型号（可选）
-- `tags`: 标签列表，用于照片分类
-
-在正文部分添加照片的详细描述。
-
-### 3. 添加照片文件
-
-将实际照片文件放在 `static/images/photos/` 目录下，确保文件名与内容文件中指定的一致。
-
-例如，如果你创建了 `content/photos/my-photo-name.md`，则应该将对应的照片文件保存为 `static/images/photos/my-photo-name.jpg`。
-
-### 4. 预览和发布
-
-使用以下命令预览博客：
-
-```bash
-hugo server -D
-```
-
-然后访问 http://localhost:1313/photos/ 查看照片墙。
-
-## 照片墙功能
-
-照片墙包含以下特性：
-
-1. 网格式照片展示
-2. 点击照片查看大图和详情
-3. 支持键盘导航浏览照片（左右箭头）
-4. 照片详情页面展示拍摄地点、相机等信息
-5. 支持按标签分类照片
-
-## 自定义
-
-如需自定义照片墙的样式和布局，可以修改以下文件：
-
-- `themes/gblog/layouts/photos/list.html`: 照片墙列表页面模板
-- `themes/gblog/layouts/photos/single.html`: 照片详情页面模板 
-
-
-```tom
-  [[menu.main]]
-    identifier = "categories"
-    name = "分类"
-    url = "/categories/"
-    weight = 5
-  [[menu.main]]
-    identifier = "tags"
-    name = "标签"
-    url = "/tags/"
-    weight = 6
-```
+如果这个项目对你有帮助，请给它一个星标！
