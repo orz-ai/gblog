@@ -1,0 +1,72 @@
+{{ $paginator := .Paginator }}
+{{ if gt $paginator.TotalPages 1 }}
+<nav class="pagination" role="navigation" aria-label="分页导航">
+    <div class="pagination-wrapper">
+        <!-- 上一页 -->
+        {{ if $paginator.HasPrev }}
+        <a href="{{ $paginator.Prev.URL }}" class="pagination-item pagination-prev" aria-label="上一页">
+            <i class="fas fa-chevron-left"></i>
+            <span>上一页</span>
+        </a>
+        {{ else }}
+        <span class="pagination-item pagination-prev disabled">
+            <i class="fas fa-chevron-left"></i>
+            <span>上一页</span>
+        </span>
+        {{ end }}
+
+        <!-- 页码 -->
+        <div class="pagination-numbers">
+            {{ $currentPage := $paginator.PageNumber }}
+            {{ $totalPages := $paginator.TotalPages }}
+            
+            <!-- 第一页 -->
+            {{ if gt $currentPage 3 }}
+            <a href="{{ $paginator.First.URL }}" class="pagination-item pagination-number">1</a>
+            {{ if gt $currentPage 4 }}
+            <span class="pagination-item pagination-ellipsis">...</span>
+            {{ end }}
+            {{ end }}
+            
+            <!-- 当前页前后的页码 -->
+            {{ range $paginator.Pagers }}
+            {{ $pageNum := .PageNumber }}
+            {{ if and (ge $pageNum (sub $currentPage 2)) (le $pageNum (add $currentPage 2)) }}
+                {{ if eq $pageNum $currentPage }}
+                <span class="pagination-item pagination-number current" aria-current="page">{{ $pageNum }}</span>
+                {{ else }}
+                <a href="{{ .URL }}" class="pagination-item pagination-number">{{ $pageNum }}</a>
+                {{ end }}
+            {{ end }}
+            {{ end }}
+            
+            <!-- 最后一页 -->
+            {{ if lt $currentPage (sub $totalPages 2) }}
+            {{ if lt $currentPage (sub $totalPages 3) }}
+            <span class="pagination-item pagination-ellipsis">...</span>
+            {{ end }}
+            <a href="{{ $paginator.Last.URL }}" class="pagination-item pagination-number">{{ $totalPages }}</a>
+            {{ end }}
+        </div>
+
+        <!-- 下一页 -->
+        {{ if $paginator.HasNext }}
+        <a href="{{ $paginator.Next.URL }}" class="pagination-item pagination-next" aria-label="下一页">
+            <span>下一页</span>
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        {{ else }}
+        <span class="pagination-item pagination-next disabled">
+            <span>下一页</span>
+            <i class="fas fa-chevron-right"></i>
+        </span>
+        {{ end }}
+    </div>
+    
+    <!-- 分页信息 -->
+    <div class="pagination-info">
+        <span>第 {{ $paginator.PageNumber }} 页，共 {{ $paginator.TotalPages }} 页</span>
+        <span class="pagination-total">共 {{ $paginator.TotalNumberOfElements }} 篇文章</span>
+    </div>
+</nav>
+{{ end }}

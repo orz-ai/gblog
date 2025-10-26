@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode }}">
+
 <head>
     {{ partial "head.html" . }}
     <style>
@@ -9,7 +10,7 @@
             padding: 40px 0;
             position: relative;
         }
-        
+
         .timeline-line {
             position: absolute;
             top: 0;
@@ -20,167 +21,162 @@
             transform: translateX(-50%);
             box-shadow: 0 0 10px rgba(74, 108, 247, 0.3);
         }
-        
+
         .timeline-items {
             position: relative;
         }
-        
+
         .timeline-item {
             display: flex;
-            margin-bottom: 60px;
+            margin-bottom: 20px;
             position: relative;
-            min-height: 100px;
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
+            min-height: 40px;
+            opacity: 1;
         }
-        
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        .timeline-item.is-visible {
+            opacity: 1;
         }
-        
+
+        .timeline-item.year-collapsed {
+            display: none;
+        }
+
         .timeline-item:last-child {
             margin-bottom: 0;
         }
-        
+
         .timeline-dot {
             position: absolute;
             left: 50%;
-            width: 24px;
-            height: 24px;
-            background: #fff;
-            border: 4px solid #4a6cf7;
-            border-radius: 50%;
             transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 3px solid #4a6cf7;
+            border-radius: 50%;
             z-index: 10;
-            box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateX(-50%) translateZ(0);
+            /* 硬件加速 */
         }
-        
+
         .timeline-item:hover .timeline-dot {
-            background: #4a6cf7;
-            transform: translateX(-50%) scale(1.2);
-            box-shadow: 0 0 0 6px rgba(74, 108, 247, 0.3);
+            transform: translateX(-50%) scale(1.1) translateZ(0);
+            box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.3);
+            border-color: #6a89ff;
         }
-        
+
         .timeline-content {
             width: 45%;
-            padding: 25px;
+            padding: 10px 15px;
             background-color: #fff;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: all 0.4s ease;
-            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
+            transform: translateZ(0);
+            /* 启用硬件加速 */
         }
-        
-        .timeline-content::before {
-            content: '';
-            position: absolute;
-            top: 24px;
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            transform: rotate(45deg);
-            z-index: -1;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        
-        .timeline-item:nth-child(odd) .timeline-content::before {
-            right: -10px;
-            border-right: none;
-            border-top: none;
-        }
-        
-        .timeline-item:nth-child(even) .timeline-content::before {
-            left: -10px;
-            border-left: none;
-            border-bottom: none;
-        }
-        
+
         .timeline-content:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px) translateZ(0);
         }
-        
+
         .timeline-date {
-            font-size: 14px;
+            font-size: 12px;
             color: #777;
-            margin-bottom: 12px;
             display: flex;
             align-items: center;
         }
-        
+
         .timeline-date i {
             margin-right: 8px;
             color: #4a6cf7;
         }
-        
+
         .timeline-title {
-            font-size: 18px;
-            margin: 0 0 15px;
-            line-height: 1.4;
+            font-size: 15px;
+            margin: 0 0 5px;
+            line-height: 1.2;
             font-weight: 600;
         }
-        
+
         .timeline-title a {
             color: #333;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
-            padding-bottom: 2px;
+            display: inline-block;
         }
-        
+
+        .timeline-title a:hover {
+            color: #4a6cf7;
+            transform: translateX(3px);
+        }
+
         .timeline-title a::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
             width: 0;
             height: 2px;
-            background: #4a6cf7;
-            transition: width 0.3s ease;
+            bottom: -2px;
+            left: 0;
+            background: linear-gradient(to right, #4a6cf7, #6a89ff);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        
-        .timeline-title a:hover {
-            color: #4a6cf7;
-        }
-        
+
         .timeline-title a:hover::after {
             width: 100%;
         }
-        
-        .timeline-type {
-            display: inline-block;
-            padding: 4px 10px;
+
+        .timeline-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .timeline-type {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 6px;
+            font-size: 10px;
             border-radius: 20px;
-            margin-bottom: 10px;
             font-weight: 500;
             letter-spacing: 0.5px;
         }
-        
+
         .timeline-type.type-post {
             background-color: rgba(74, 108, 247, 0.1);
             color: #4a6cf7;
         }
-        
+
         .timeline-type.type-photo {
             background-color: rgba(46, 204, 113, 0.1);
             color: #2ecc71;
         }
-        
+
+        .timeline-summary {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
         .timeline-item:nth-child(odd) .timeline-content {
             margin-right: 55%;
         }
-        
+
         .timeline-item:nth-child(even) .timeline-content {
             margin-left: 55%;
         }
-        
+
         .timeline-year {
             position: relative;
             text-align: center;
@@ -190,64 +186,88 @@
             opacity: 0;
             transform: translateY(20px);
         }
-        
+
         .timeline-year-label {
-            display: inline-block;
-            padding: 8px 20px;
-            background: linear-gradient(135deg, #4a6cf7, #6a89ff);
-            color: #fff;
-            font-weight: 600;
-            border-radius: 30px;
             position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #4a6cf7, #6a89ff);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
             z-index: 10;
-            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3);
             letter-spacing: 1px;
         }
-        
+
+        .timeline-year-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
+        }
+
+        .timeline-year-label::after {
+            content: '\f107';
+            /* Font Awesome down arrow */
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-left: 10px;
+            font-size: 14px;
+            color: #4a6cf7;
+        }
+
+        .timeline-year-label.collapsed::after {
+            content: '\f105';
+            /* Font Awesome right arrow */
+        }
+
         @media (max-width: 768px) {
             .timeline-line {
                 left: 30px;
             }
-            
+
             .timeline-dot {
                 left: 30px;
             }
-            
+
             .timeline-content {
                 width: calc(100% - 80px);
                 margin-left: 80px !important;
             }
-            
+
             .timeline-item:nth-child(odd) .timeline-content::before,
             .timeline-item:nth-child(even) .timeline-content::before {
-                left: -10px;
+                left: -8px;
                 border-left: none;
                 border-bottom: none;
             }
-            
+
             .timeline-item:nth-child(odd) .timeline-content,
             .timeline-item:nth-child(even) .timeline-content {
                 margin-right: 0;
             }
-            
+
             .timeline-year-label {
                 font-size: 14px;
                 padding: 6px 16px;
             }
         }
-        
+
         /* 添加滚动触发动画 */
         .js-timeline-item {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        
+
         .js-timeline-item.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         /* 添加一些额外的样式美化 */
         .page-header {
             text-align: center;
@@ -255,20 +275,20 @@
             padding-bottom: 20px;
             position: relative;
         }
-        
+
         .page-header h1 {
             font-size: 36px;
             margin-bottom: 15px;
             color: #333;
         }
-        
+
         .page-header p {
             color: #666;
             font-size: 18px;
             max-width: 600px;
             margin: 0 auto;
         }
-        
+
         .page-header::after {
             content: '';
             position: absolute;
@@ -282,6 +302,7 @@
         }
     </style>
 </head>
+
 <body>
     {{ partial "header.html" . }}
     <main class="main">
@@ -290,7 +311,7 @@
                 <h1>{{ .Title }}</h1>
                 <p>{{ .Description }}</p>
             </div>
-            
+
             <div class="timeline-container">
                 <div class="timeline-line"></div>
                 <div class="timeline-items">
@@ -298,21 +319,22 @@
                     {{ $photoPages := where .Site.RegularPages "Section" "photos" }}
                     {{ $allPages := append $postPages $photoPages }}
                     {{ $sortedPages := sort $allPages "Date" "desc" }}
-                    
+
                     {{ $currentYear := "" }}
                     {{ range $sortedPages }}
-                        {{ $year := .Date.Format "2006" }}
-                        
-                        {{ if ne $currentYear $year }}
-                            <div class="timeline-year js-timeline-item">
-                                <div class="timeline-year-label">{{ $year }}</div>
-                            </div>
-                            {{ $currentYear = $year }}
-                        {{ end }}
-                        
-                        <div class="timeline-item js-timeline-item">
-                            <div class="timeline-dot"></div>
-                            <div class="timeline-content">
+                    {{ $year := .Date.Format "2006" }}
+
+                    {{ if ne $currentYear $year }}
+                    <div class="timeline-year js-timeline-item">
+                        <div class="timeline-year-label collapsed" data-year="{{ $year }}">{{ $year }}</div>
+                    </div>
+                    {{ $currentYear = $year }}
+                    {{ end }}
+
+                    <div class="timeline-item js-timeline-item year-{{ $year }} year-collapsed">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-meta">
                                 {{ if eq .Section "photos" }}
                                 <span class="timeline-type type-photo">
                                     <i class="fas fa-camera"></i> 照片
@@ -322,66 +344,54 @@
                                     <i class="fas fa-file-alt"></i> 文章
                                 </span>
                                 {{ end }}
-                                
-                                <h3 class="timeline-title">
-                                    <a href="{{ .Permalink }}">{{ .Title }}</a>
-                                </h3>
-                                
+
                                 <div class="timeline-date">
                                     <i class="fas fa-calendar-alt"></i>
                                     {{ .Date.Format "2006-01-02" }}
                                 </div>
                             </div>
+
+                            <h3 class="timeline-title">
+                                <a href="{{ .Permalink }}">{{ .Title }}</a>
+                            </h3>
                         </div>
+                    </div>
                     {{ end }}
                 </div>
             </div>
         </div>
     </main>
-    
+
     {{ partial "footer.html" . }}
-    
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 滚动时触发动画
-            const timelineItems = document.querySelectorAll('.js-timeline-item');
-            
-            // 初始化第一个元素为可见
-            if (timelineItems.length > 0) {
-                timelineItems[0].classList.add('is-visible');
-            }
-            
-            // 检查元素是否在视口中
-            function isElementInViewport(el) {
-                const rect = el.getBoundingClientRect();
-                return (
-                    rect.top >= 0 &&
-                    rect.left >= 0 &&
-                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-                );
-            }
-            
-            // 检查是否应该显示元素
-            function checkVisibility() {
-                let delay = 100;
-                
-                timelineItems.forEach(function(item, index) {
-                    if (isElementInViewport(item)) {
-                        setTimeout(function() {
-                            item.classList.add('is-visible');
-                        }, delay);
-                        delay += 100;
+        document.addEventListener('DOMContentLoaded', function () {
+            // 年份折叠/展开功能 - 无动画版本
+            const yearLabels = document.querySelectorAll('.timeline-year-label');
+
+            yearLabels.forEach(function (label) {
+                label.addEventListener('click', function () {
+                    const year = this.getAttribute('data-year');
+                    const yearItems = document.querySelectorAll('.year-' + year);
+                    const isCollapsed = this.classList.contains('collapsed');
+
+                    if (isCollapsed) {
+                        // 展开
+                        this.classList.remove('collapsed');
+                        yearItems.forEach(function (item) {
+                            item.classList.remove('year-collapsed');
+                        });
+                    } else {
+                        // 折叠
+                        this.classList.add('collapsed');
+                        yearItems.forEach(function (item) {
+                            item.classList.add('year-collapsed');
+                        });
                     }
                 });
-            }
-            
-            // 监听滚动事件
-            window.addEventListener('scroll', checkVisibility);
-            
-            // 初始化检查
-            checkVisibility();
+            });
         });
     </script>
 </body>
-</html> 
+
+</html>
