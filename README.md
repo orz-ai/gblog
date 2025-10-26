@@ -172,12 +172,3 @@ gblog/
 ## 许可证
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
-
-## 联系方式
-
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your-email@example.com
-
----
-
-如果这个项目对你有帮助，请给它一个星标！
