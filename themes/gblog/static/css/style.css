@@ -1847,3 +1847,314 @@ a {
         font-size: 1rem;
     }
 }
+
+/* 文章目录样式 */
+.toc-container {
+    position: fixed;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+    width: 280px;
+    max-height: 70vh;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.toc-container.collapsed {
+    max-height: 50px;
+}
+
+.toc-container.hidden {
+    transform: translateY(-50%) translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 12px 12px 0 0;
+}
+
+.toc-header i {
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.toc-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.toc-hide-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.toc-hide-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.toc-toggle {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.toc-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.toc-nav {
+    padding: 0.5rem 0;
+    max-height: calc(70vh - 80px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.toc-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.toc-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.toc-nav::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+.toc-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* 目录项目样式 - 现代化设计 */
+.toc-item {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.toc-link {
+    display: block;
+    padding: 0.5rem 1.2rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 0 8px 8px 0;
+    margin-right: 0.5rem;
+    position: relative;
+    cursor: pointer;
+}
+
+.toc-link:hover {
+    background: linear-gradient(90deg, rgba(var(--primary-color-rgb), 0.08) 0%, rgba(var(--primary-color-rgb), 0.02) 100%);
+    color: var(--primary-color);
+    transform: translateX(2px);
+}
+
+.toc-link.active {
+    background: linear-gradient(90deg, rgba(var(--primary-color-rgb), 0.12) 0%, rgba(var(--primary-color-rgb), 0.04) 100%);
+    color: var(--primary-color);
+    font-weight: 500;
+    border-left: 3px solid var(--primary-color);
+}
+
+.toc-link.toc-expandable::after {
+    content: '▶';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    color: var(--text-color);
+    opacity: 0.5;
+    transition: all 0.2s ease;
+}
+
+.toc-link.toc-expandable.toc-expanded::after {
+    transform: translateY(-50%) rotate(90deg);
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.toc-text {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 2rem);
+}
+
+/* 层级缩进 - 优雅的层级设计 */
+.toc-level-1 .toc-link {
+    padding-left: 1.2rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.toc-level-2 .toc-link {
+    padding-left: 1.8rem;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.toc-level-3 .toc-link {
+    padding-left: 2.4rem;
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
+
+.toc-level-4 .toc-link {
+    padding-left: 3rem;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.toc-level-5 .toc-link {
+    padding-left: 3.6rem;
+    font-size: 0.75rem;
+    opacity: 0.75;
+}
+
+.toc-level-6 .toc-link {
+    padding-left: 4.2rem;
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+/* 目录层级折叠样式 */
+.toc-item-content {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.toc-parent > .toc-item-content > .toc-link {
+    flex: 1;
+}
+
+.toc-list.toc-collapsed {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.toc-list:not(.toc-collapsed) {
+    max-height: 1000px;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .toc-container {
+        right: 1rem;
+        width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .toc-container {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        width: 100%;
+        margin: 1rem 0;
+        max-height: none;
+    }
+    
+    .toc-container.collapsed {
+        max-height: 50px;
+    }
+    
+    .toc-nav {
+        max-height: 300px;
+    }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+    .toc-container {
+        background: rgba(30, 30, 30, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .toc-header {
+        background: var(--primary-color);
+    }
+    
+    .toc-link {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .toc-link:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--primary-color);
+    }
+    
+    .toc-link.active {
+        background-color: rgba(var(--primary-color-rgb), 0.2);
+        color: var(--primary-color);
+    }
+}
+
+
+
+.toc-show-btn {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.toc-show-btn:hover {
+    background: var(--primary-color-dark);
+    transform: translateY(-50%) scale(1.1);
+}

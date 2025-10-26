@@ -6,14 +6,15 @@
             </a>
             <div class="header-right">
                 <div class="search-box">
-                    <form action="{{ "search" | relURL }}" method="get">
+                    <form action="{{ " search" | relURL }}" method="get">
                         <input type="text" name="q" placeholder="搜索..." aria-label="搜索">
                         <button type="submit" aria-label="提交搜索"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
                 <nav class="nav">
                     {{ range .Site.Menus.main }}
-                    <a href="{{ .URL }}" class="nav-link{{ if $.IsMenuCurrent "main" . }} active{{ end }}">{{ .Name }}</a>
+                    <a href="{{ .URL }}" class="nav-link{{ if $.IsMenuCurrent " main" . }} active{{ end }}">{{ .Name
+                        }}</a>
                     {{ end }}
                 </nav>
             </div>
