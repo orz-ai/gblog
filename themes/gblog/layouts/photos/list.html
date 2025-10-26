@@ -445,26 +445,6 @@
                 </div>
                 {{ end }}
             </div>
-            
-            <div class="photo-modal" id="photoModal">
-                <span class="close-modal">&times;</span>
-                <div class="modal-content">
-                    <img id="modalImage" src="" alt="">
-                    <div class="modal-caption">
-                        <h3 id="modalTitle"></h3>
-                        <p id="modalDescription"></p>
-                        <div class="modal-info">
-                            <span id="modalDate"><i class="fas fa-calendar-alt"></i> <span></span></span>
-                            <span id="modalLocation"><i class="fas fa-map-marker-alt"></i> <span></span></span>
-                            <span id="modalCamera"><i class="fas fa-camera"></i> <span></span></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-navigation">
-                    <button id="prevPhoto" aria-label="上一张照片"><i class="fas fa-chevron-left"></i></button>
-                    <button id="nextPhoto" aria-label="下一张照片"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
         </div>
     </main>
     
@@ -473,33 +453,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const photoItems = document.querySelectorAll('.photo-item');
-            const photoModal = document.getElementById('photoModal');
-            const modalImage = document.getElementById('modalImage');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const modalDate = document.querySelector('#modalDate span');
-            const modalLocation = document.querySelector('#modalLocation span');
-            const modalCamera = document.querySelector('#modalCamera span');
-            const modalLocationContainer = document.getElementById('modalLocation');
-            const modalCameraContainer = document.getElementById('modalCamera');
-            const closeModal = document.querySelector('.close-modal');
-            const prevButton = document.getElementById('prevPhoto');
-            const nextButton = document.getElementById('nextPhoto');
             const filterButtons = document.querySelectorAll('.filter-btn');
-            
-            let currentIndex = 0;
-            let filteredItems = [...photoItems];
-            
-            // 确保导航按钮正确显示
-            function checkNavButtons() {
-                if (filteredItems.length <= 1) {
-                    prevButton.style.display = 'none';
-                    nextButton.style.display = 'none';
-                } else {
-                    prevButton.style.display = 'flex';
-                    nextButton.style.display = 'flex';
-                }
-            }
             
             // 过滤功能
             filterButtons.forEach(button => {
@@ -523,153 +477,19 @@
                             }
                         }
                     });
-                    
-                    // 更新可见照片列表
-                    updateFilteredItems();
                 });
             });
             
-            // 更新筛选后的照片列表
-            function updateFilteredItems() {
-                filteredItems = [...photoItems].filter(item => 
-                    window.getComputedStyle(item).display !== 'none'
-                );
-                checkNavButtons();
-            }
-            
-            // 打开模态框
+            // 点击影集跳转到详情页
             photoItems.forEach((item) => {
                 item.addEventListener('click', function() {
-                    updateFilteredItems();
-                    currentIndex = filteredItems.indexOf(item);
-                    updateModal();
-                    photoModal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+                    const url = item.getAttribute('data-url');
+                    if (url) {
+                        window.location.href = url;
+                    }
                 });
-            });
-            
-            // 关闭模态框
-            closeModal.addEventListener('click', function() {
-                photoModal.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-            
-            // 点击模态框外部关闭
-            photoModal.addEventListener('click', function(e) {
-                if (e.target === photoModal) {
-                    photoModal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-            
-            // 上一张/下一张
-            prevButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                currentIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
-                updateModal();
-            });
-            
-            nextButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                currentIndex = (currentIndex + 1) % filteredItems.length;
-                updateModal();
-            });
-            
-            // 键盘导航
-            document.addEventListener('keydown', function(e) {
-                if (!photoModal.classList.contains('active')) return;
-                
-                if (e.key === 'Escape') {
-                    photoModal.classList.remove('active');
-                    document.body.style.overflow = '';
-                } else if (e.key === 'ArrowLeft') {
-                    currentIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
-                    updateModal();
-                } else if (e.key === 'ArrowRight') {
-                    currentIndex = (currentIndex + 1) % filteredItems.length;
-                    updateModal();
-                }
-            });
-            
-            function updateModal() {
-                const item = filteredItems[currentIndex];
-                const img = item.querySelector('img');
-                const title = item.querySelector('.photo-title').textContent;
-                const date = item.querySelector('.photo-date').textContent.trim();
-                const url = item.getAttribute('data-url');
-                
-                modalImage.src = img.src;
-                modalTitle.textContent = title;
-                modalDate.textContent = date.replace(/.*\s/, '');  // 仅保留日期部分
-                
-                // 获取照片的详细描述（如果有）
-                if (url) {
-                    fetch(url)
-                        .then(response => response.text())
-                        .then(html => {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, 'text/html');
-                            const description = doc.querySelector('.photo-description');
-                            modalDescription.textContent = description ? description.textContent.trim() : '';
-                            
-                            // 获取位置和相机信息
-                            const location = doc.querySelector('[itemprop="contentLocation"]') || 
-                                            doc.querySelector('.photo-meta [data-location]');
-                            const camera = doc.querySelector('[itemprop="tool"]') || 
-                                        doc.querySelector('.photo-meta [data-camera]');
-                            
-                            // 设置位置
-                            if (location) {
-                                modalLocationContainer.style.display = 'flex';
-                                modalLocation.textContent = location.textContent.trim();
-                            } else {
-                                modalLocationContainer.style.display = 'none';
-                            }
-                            
-                            // 设置相机
-                            if (camera) {
-                                modalCameraContainer.style.display = 'flex';
-                                modalCamera.textContent = camera.textContent.trim();
-                            } else {
-                                modalCameraContainer.style.display = 'none';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching photo details:', error);
-                            modalDescription.textContent = '';
-                            modalLocationContainer.style.display = 'none';
-                            modalCameraContainer.style.display = 'none';
-                        });
-                }
-            }
-            
-            // 初始化
-            updateFilteredItems();
-            
-            // 防止模态框内按钮点击事件冒泡
-            prevButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-            
-            nextButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-            
-            // 添加鼠标滚轮滚动功能
-            photoModal.addEventListener('wheel', function(e) {
-                e.preventDefault(); // 防止页面滚动
-                
-                if (e.deltaY > 0) {
-                    // 向下滚动，显示下一张
-                    currentIndex = (currentIndex + 1) % filteredItems.length;
-                } else {
-                    // 向上滚动，显示上一张
-                    currentIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
-                }
-                
-                updateModal();
             });
         });
     </script>
 </body>
-</html> 
+</html>

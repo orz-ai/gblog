@@ -1,34 +1,157 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode }}">
+
 <head>
     {{ partial "head.html" . }}
     <style>
+        /* 全宽容器样式 */
+        .photo-full-width {
+            width: 100%;
+            padding: 0;
+        }
+
         .photo-single {
             display: flex;
             flex-direction: column;
             margin: 30px 0;
         }
-        
-        .photo-container {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+        .photo-gallery {
+            display: block;
             margin-bottom: 30px;
         }
-        
+
+        .photo-container {
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
         .photo-container img {
             width: 100%;
+            height: auto;
+            object-fit: cover;
             display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
+        /* 照片容器样式 - 移除额外的容器限制 */
+        .photo-gallery.single-photo {
+            margin-bottom: 20px;
+        }
+
+        .photo-gallery.single-photo .photo-container {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .photo-gallery.single-photo .photo-container img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+
+        /* 模态框样式 */
+        .photo-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image {
+            max-width: 95vw;
+            max-height: 95vh;
+            object-fit: contain;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1002;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            color: #bbb;
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .modal-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-prev {
+            left: 20px;
+        }
+
+        .modal-next {
+            right: 20px;
+        }
+
+        .modal-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
         .photo-header {
             margin-bottom: 30px;
         }
-        
+
         .photo-header h1 {
             margin-bottom: 10px;
         }
-        
+
         .photo-meta {
             display: flex;
             flex-wrap: wrap;
@@ -37,28 +160,60 @@
             color: #666;
             margin-bottom: 20px;
         }
-        
+
         .photo-meta span {
             display: flex;
             align-items: center;
         }
-        
+
         .photo-meta i {
             margin-right: 5px;
         }
-        
+
+        /* 照片描述和导航区域 - 移除额外的容器限制 */
+        .photo-description,
+        .photo-navigation {
+            margin-top: 20px;
+        }
+
+        /* 照片头部样式 - 移除额外的容器限制 */
+        .photo-header {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .photo-header h1 {
+            text-align: left;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+        }
+
         .photo-description {
             line-height: 1.7;
             margin-bottom: 30px;
         }
-        
+
+        .photo-description img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .photo-description p {
+            margin-bottom: 15px;
+        }
+
         .photo-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 20px;
         }
-        
+
         .photo-tags .tag {
             background: #f1f1f1;
             padding: 5px 12px;
@@ -68,11 +223,11 @@
             text-decoration: none;
             transition: background 0.3s ease;
         }
-        
+
         .photo-tags .tag:hover {
             background: #e0e0e0;
         }
-        
+
         .photo-nav {
             display: flex;
             justify-content: space-between;
@@ -80,7 +235,7 @@
             padding-top: 20px;
             border-top: 1px solid #eaeaea;
         }
-        
+
         .photo-nav a {
             display: flex;
             align-items: center;
@@ -88,27 +243,27 @@
             color: #333;
             transition: color 0.3s ease;
         }
-        
+
         .photo-nav a:hover {
             color: #0066cc;
         }
-        
+
         .photo-nav-prev i {
             margin-right: 10px;
         }
-        
+
         .photo-nav-next i {
             margin-left: 10px;
         }
-        
+
         @media (min-width: 768px) {
             .photo-container img {
-                max-height: 70vh;
                 object-fit: contain;
             }
         }
     </style>
 </head>
+
 <body>
     {{ partial "header.html" . }}
     <main class="main">
@@ -121,14 +276,14 @@
                             <i class="fas fa-calendar"></i>
                             {{ .Date.Format .Site.Params.dateFormat }}
                         </span>
-                        
+
                         {{ if .Params.location }}
                         <span>
                             <i class="fas fa-map-marker-alt"></i>
                             {{ .Params.location }}
                         </span>
                         {{ end }}
-                        
+
                         {{ if .Params.camera }}
                         <span>
                             <i class="fas fa-camera"></i>
@@ -136,24 +291,41 @@
                         </span>
                         {{ end }}
                     </div>
-                    
+
                     {{ with .Params.tags }}
                     <div class="photo-tags">
                         {{ range . }}
-                        <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
+                        <a href="{{ " tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
                         {{ end }}
                     </div>
                     {{ end }}
                 </header>
-                
-                <div class="photo-container">
-                    <img src="{{ .Params.image }}" alt="{{ .Title }}">
+
+                <!-- 照片画廊 -->
+                <div class="photo-gallery" id="photoGallery">
+                    <!-- 首先显示 front matter 中的主图片 -->
+                    {{ if .Params.image }}
+                    <div class="photo-container" data-src="{{ .Params.image }}" data-alt="{{ .Title }}">
+                        <img src="{{ .Params.image }}" alt="{{ .Title }}">
+                    </div>
+                    {{ end }}
                 </div>
-                
+
                 <div class="photo-description">
                     {{ .Content }}
                 </div>
-                
+
+                <!-- 模态框 -->
+                <div class="photo-modal" id="photoModal">
+                    <span class="close-modal">&times;</span>
+                    <div class="modal-content">
+                        <img class="modal-image" id="modalImage" src="" alt="">
+                        <button class="modal-nav modal-prev" id="modalPrev">&#10094;</button>
+                        <button class="modal-nav modal-next" id="modalNext">&#10095;</button>
+                    </div>
+                    <div class="modal-counter" id="modalCounter">1 / 1</div>
+                </div>
+
                 <div class="photo-nav">
                     {{ with .PrevInSection }}
                     <a href="{{ .Permalink }}" class="photo-nav-prev">
@@ -163,7 +335,7 @@
                     {{ else }}
                     <div></div>
                     {{ end }}
-                    
+
                     {{ with .NextInSection }}
                     <a href="{{ .Permalink }}" class="photo-nav-next">
                         <span>{{ .Title }}</span>
@@ -176,7 +348,147 @@
             </article>
         </div>
     </main>
-    
+
     {{ partial "footer.html" . }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const photoGallery = document.getElementById('photoGallery');
+            const photoModal = document.getElementById('photoModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalCounter = document.getElementById('modalCounter');
+            const closeModal = document.querySelector('.close-modal');
+            const modalPrev = document.getElementById('modalPrev');
+            const modalNext = document.getElementById('modalNext');
+
+            let currentImageIndex = 0;
+            let images = [];
+
+            // 为文章内容中的图片添加点击事件
+            function setupContentImages() {
+                const contentImages = document.querySelectorAll('.photo-description img');
+                contentImages.forEach((img, index) => {
+                    // 添加点击事件
+                    img.addEventListener('click', function () {
+                        openModal(index + (photoGallery.querySelectorAll('.photo-container').length));
+                    });
+                });
+            }
+
+            // 初始化图片数组
+            function initializeImages() {
+                // 首先添加画廊中的图片（front matter中的主图片）
+                const photoContainers = document.querySelectorAll('.photo-container');
+                images = Array.from(photoContainers).map(container => ({
+                    src: container.getAttribute('data-src'),
+                    alt: container.getAttribute('data-alt')
+                }));
+
+                // 然后添加文章内容中的图片
+                const contentImages = document.querySelectorAll('.photo-description img');
+                contentImages.forEach(img => {
+                    images.push({
+                        src: img.src,
+                        alt: img.alt || '图片'
+                    });
+                });
+
+                // 如果只有一张图片，添加单图片样式
+                if (images.length === 1) {
+                    photoGallery.classList.add('single-photo');
+                }
+
+                // 为每个照片容器添加点击事件
+                photoContainers.forEach((container, index) => {
+                    container.addEventListener('click', () => {
+                        openModal(index);
+                    });
+                });
+            }
+
+            // 打开模态框
+            function openModal(index) {
+                currentImageIndex = index;
+                modalImage.src = images[index].src;
+                modalImage.alt = images[index].alt;
+                updateCounter();
+                photoModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            // 关闭模态框
+            function closeModalFunc() {
+                photoModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+
+            // 更新计数器
+            function updateCounter() {
+                modalCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+            }
+
+            // 显示上一张图片
+            function showPrevImage() {
+                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                modalImage.src = images[currentImageIndex].src;
+                modalImage.alt = images[currentImageIndex].alt;
+                updateCounter();
+            }
+
+            // 显示下一张图片
+            function showNextImage() {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                modalImage.src = images[currentImageIndex].src;
+                modalImage.alt = images[currentImageIndex].alt;
+                updateCounter();
+            }
+
+            // 事件监听器
+            closeModal.addEventListener('click', closeModalFunc);
+            modalPrev.addEventListener('click', showPrevImage);
+            modalNext.addEventListener('click', showNextImage);
+
+            // 点击模态框背景关闭
+            photoModal.addEventListener('click', function (e) {
+                if (e.target === photoModal) {
+                    closeModalFunc();
+                }
+            });
+
+            // 键盘导航
+            document.addEventListener('keydown', function (e) {
+                if (photoModal.style.display === 'block') {
+                    switch (e.key) {
+                        case 'Escape':
+                            closeModalFunc();
+                            break;
+                        case 'ArrowLeft':
+                            showPrevImage();
+                            break;
+                        case 'ArrowRight':
+                            showNextImage();
+                            break;
+                    }
+                }
+            });
+
+            // 隐藏导航按钮如果只有一张图片
+            function updateNavigation() {
+                if (images.length <= 1) {
+                    modalPrev.style.display = 'none';
+                    modalNext.style.display = 'none';
+                } else {
+                    modalPrev.style.display = 'block';
+                    modalNext.style.display = 'block';
+                }
+            }
+
+            // 初始化
+            setupContentImages();
+            initializeImages();
+            updateNavigation();
+        });
+    </script>
 </body>
-</html> 
+
+</html>
