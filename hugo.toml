@@ -1,7 +1,7 @@
 baseURL = "http://example.org/"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"
-title = "我的博客"
+title = "Gang's Blog"
 theme = "gblog"
 
 # SEO设置
@@ -11,8 +11,8 @@ canonifyURLs = true
 
 # 作者信息
 [author]
-  name = "博主"
-  email = "your-email@example.com"
+  name = "Gang"
+  email = "deepincode@qq.com"
 
 # 站点参数
 [params]
@@ -25,9 +25,9 @@ canonifyURLs = true
   images = ["images/hero-bg.jpg"] # 默认社交分享图片
   # 社交媒体链接
   [params.social]
-    github = "https://github.com/yourusername"
-    twitter = "https://twitter.com/yourusername"
-    weibo = "https://weibo.com/yourusername"
+    github = "https://github.com/orz-ai"
+    twitter = "https://twitter.com/xxx"
+    weibo = "https://weibo.com/xxx"
   
   # 文章设置
   [params.post]
