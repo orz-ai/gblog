@@ -1,8 +1,8 @@
 
 
 # GBlog - Hugo 个人博客主题
-
 ![预览](preview.png)
+预览: [orz-ai.github.io](https://orz-ai.github.io)
 
 一个基于 Hugo 的现代化个人博客主题，集成了文章发布、照片墙、时间线等功能。
 
