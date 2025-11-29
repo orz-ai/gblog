@@ -132,12 +132,9 @@
             <!-- 文章目录 -->
             <div class="toc-container" id="tocContainer">
                 <div class="toc-header">
-                    <button class="toc-hide-btn" id="tocHideBtn" title="隐藏目录">
-                        <i class="fas fa-list"></i>
-                    </button>
-                    <span>目录</span>
-                    <button class="toc-toggle" id="tocToggle">
-                        <i class="fas fa-chevron-up"></i>
+                    <span><i class="fas fa-list"></i> 目录</span>
+                    <button class="toc-hide-btn" id="tocHideBtn" title="收起目录">
+                        <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
                 <nav class="toc-nav" id="tocNav">
@@ -224,10 +221,42 @@
             // 目录功能
             const tocContainer = document.getElementById('tocContainer');
             const tocNav = document.getElementById('tocNav');
-            const tocToggle = document.getElementById('tocToggle');
             const postContent = document.querySelector('.post-content');
 
             if (!postContent) return;
+
+            // 自动给标题添加序号
+            function addHeadingNumbers() {
+                const headings = postContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                let counters = [0, 0, 0, 0, 0, 0]; // 用于跟踪各级标题的计数
+
+                headings.forEach(heading => {
+                    const level = parseInt(heading.tagName.charAt(1)) - 1; // h1=0, h2=1, ...
+
+                    // 更新当前级别的计数器
+                    counters[level]++;
+
+                    // 重置更深层级的计数器
+                    for (let i = level + 1; i < counters.length; i++) {
+                        counters[i] = 0;
+                    }
+
+                    // 构建序号字符串
+                    let numberStr = '';
+                    for (let i = 0; i <= level; i++) {
+                        if (counters[i] > 0) {
+                            numberStr += (numberStr ? '.' : '') + counters[i];
+                        }
+                    }
+                    numberStr += '. ';
+
+                    // 添加序号到标题前面
+                    const numberSpan = document.createElement('span');
+                    numberSpan.className = 'heading-number';
+                    numberSpan.textContent = numberStr;
+                    heading.insertBefore(numberSpan, heading.firstChild);
+                });
+            }
 
             // 生成目录
             function generateTOC() {
@@ -291,14 +320,6 @@
                     levelStack.push({ level: level, element: listItem });
                 });
             }
-
-            // 目录折叠功能
-            tocToggle.addEventListener('click', function () {
-                const isCollapsed = tocNav.style.display === 'none';
-                tocNav.style.display = isCollapsed ? 'block' : 'none';
-                tocToggle.querySelector('i').className = isCollapsed ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
-                tocContainer.classList.toggle('collapsed', !isCollapsed);
-            });
 
             // 滚动监听和高亮
             function updateActiveHeading() {
@@ -376,15 +397,17 @@
             });
 
             // 初始化
-            generateTOC();
+            addHeadingNumbers(); // 先添加序号
+            generateTOC(); // 再生成目录
             updateActiveHeading();
 
-            // 为目录隐藏按钮添加点击事件
+            // 为目录隐藏/展开按钮添加点击事件
             const tocHideBtn = document.getElementById('tocHideBtn');
             const tocShowBtn = document.getElementById('tocShowBtn');
 
             if (tocHideBtn) {
                 tocHideBtn.addEventListener('click', function () {
+                    // 收起目录
                     tocContainer.classList.add('hidden');
                     if (tocShowBtn) {
                         tocShowBtn.style.display = 'block';
@@ -394,6 +417,7 @@
 
             if (tocShowBtn) {
                 tocShowBtn.addEventListener('click', function () {
+                    // 展开目录
                     tocContainer.classList.remove('hidden');
                     tocShowBtn.style.display = 'none';
                 });

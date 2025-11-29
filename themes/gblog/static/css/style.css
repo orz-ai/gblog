@@ -210,7 +210,6 @@ a {
 
 /* 文章内容 */
 .post-content {
-    padding: 24px 30px;
 }
 
 .post-card:not(:has(.post-image)) .post-content {
@@ -384,20 +383,16 @@ a {
     margin-bottom: 1em;
     font-family: var(--font-heading);
     position: relative;
-    padding-left: 15px;
+
 }
 
-.post-content h2:before,
-.post-content h3:before,
-.post-content h4:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    height: 60%;
-    width: 4px;
-    background: var(--gradient-bg);
-    border-radius: 2px;
+
+
+/* 标题序号样式 */
+.heading-number {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-right: 0.5em;
 }
 
 .post-content p {
@@ -913,7 +908,7 @@ a {
     }
 
     .main {
-        margin-top: 180px;
+        margin-top: 220px;
     }
     
     .post, .post-card {
@@ -2117,7 +2112,8 @@ a {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     z-index: 1000;
-    transition: all 0.3s ease;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s ease;
     overflow: hidden;
 }
 
@@ -2126,7 +2122,7 @@ a {
 }
 
 .toc-container.hidden {
-    transform: translateY(-50%) translateX(100%);
+    right: -280px;
     opacity: 0;
     pointer-events: none;
 }
@@ -2143,7 +2139,12 @@ a {
     border-radius: 12px 12px 0 0;
 }
 
-.toc-header i {
+.toc-header span {
+    display: flex;
+    align-items: center;
+}
+
+.toc-header span i {
     margin-right: 0.5rem;
     font-size: 0.8rem;
 }
@@ -2162,11 +2163,41 @@ a {
     cursor: pointer;
     padding: 0.25rem;
     border-radius: 4px;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .toc-hide-btn:hover {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.toc-hide-btn i {
+    transition: transform 0.3s ease;
+}
+
+.toc-header span {
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
+.toc-container.hidden .toc-header span {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.toc-container.hidden .toc-toggle {
+    display: none;
+}
+
+.toc-nav {
+    transition: opacity 0.2s ease;
+}
+
+.toc-container.hidden .toc-nav {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .toc-toggle {
@@ -2345,21 +2376,11 @@ a {
 
 @media (max-width: 768px) {
     .toc-container {
-        position: relative;
-        top: auto;
-        right: auto;
-        transform: none;
-        width: 100%;
-        margin: 1rem 0;
-        max-height: none;
+        display: none;
     }
     
-    .toc-container.collapsed {
-        max-height: 50px;
-    }
-    
-    .toc-nav {
-        max-height: 300px;
+    .toc-show-btn {
+        display: none !important;
     }
 }
 
