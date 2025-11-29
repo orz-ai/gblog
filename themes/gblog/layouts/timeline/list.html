@@ -9,6 +9,16 @@
             margin: 0 auto;
             padding: 40px 0;
             position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .timeline-line {
@@ -16,10 +26,30 @@
             top: 0;
             bottom: 0;
             left: 50%;
-            width: 3px;
-            background: linear-gradient(to bottom, #4a6cf7, #6a89ff, #4a6cf7);
+            width: 2px;
+            background: linear-gradient(to bottom,
+                    rgba(74, 108, 247, 0.1) 0%,
+                    rgba(74, 108, 247, 0.6) 15%,
+                    rgba(106, 137, 255, 0.8) 50%,
+                    rgba(74, 108, 247, 0.6) 85%,
+                    rgba(74, 108, 247, 0.1) 100%);
             transform: translateX(-50%);
-            box-shadow: 0 0 10px rgba(74, 108, 247, 0.3);
+            box-shadow: 0 0 20px rgba(74, 108, 247, 0.15);
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: repeating-linear-gradient(to bottom,
+                    transparent,
+                    transparent 10px,
+                    rgba(255, 255, 255, 0.3) 10px,
+                    rgba(255, 255, 255, 0.3) 20px);
         }
 
         .timeline-items {
@@ -50,22 +80,70 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: 16px;
-            height: 16px;
-            background: white;
-            border: 3px solid #4a6cf7;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #4a6cf7 0%, #6a89ff 100%);
             border-radius: 50%;
             z-index: 10;
-            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+            box-shadow:
+                0 0 0 4px rgba(255, 255, 255, 0.9),
+                0 0 0 6px rgba(74, 108, 247, 0.2),
+                0 3px 10px rgba(74, 108, 247, 0.3);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             transform: translateX(-50%) translateZ(0);
-            /* 硬件加速 */
+            position: relative;
+        }
+
+        .timeline-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.9;
+        }
+
+        .timeline-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(106, 137, 255, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 0;
+            }
         }
 
         .timeline-item:hover .timeline-dot {
-            transform: translateX(-50%) scale(1.1) translateZ(0);
-            box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.3);
-            border-color: #6a89ff;
+            transform: translateX(-50%) scale(1.15) translateZ(0);
+            box-shadow:
+                0 0 0 4px rgba(255, 255, 255, 1),
+                0 0 0 8px rgba(106, 137, 255, 0.3),
+                0 5px 15px rgba(74, 108, 247, 0.4);
+        }
+
+        .timeline-item:hover .timeline-dot::after {
+            animation: pulse-ring 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
         .timeline-content {
@@ -75,15 +153,49 @@
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(74, 108, 247, 0.1);
             position: relative;
             transform: translateZ(0);
-            /* 启用硬件加速 */
+        }
+
+        /* 添加连接到节点的线条 */
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(74, 108, 247, 0.3), transparent);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -30px;
+            top: 20px;
+            background: linear-gradient(to right, transparent, rgba(74, 108, 247, 0.3));
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -30px;
+            top: 20px;
+            background: linear-gradient(to left, transparent, rgba(74, 108, 247, 0.3));
         }
 
         .timeline-content:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 30px rgba(74, 108, 247, 0.15);
             transform: translateY(-2px) translateZ(0);
+            border-color: rgba(74, 108, 247, 0.3);
+        }
+
+        .timeline-content:hover::before {
+            background: linear-gradient(to right, rgba(106, 137, 255, 0.5), transparent);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content:hover::before {
+            background: linear-gradient(to right, transparent, rgba(106, 137, 255, 0.5));
+        }
+
+        .timeline-item:nth-child(even) .timeline-content:hover::before {
+            background: linear-gradient(to left, transparent, rgba(106, 137, 255, 0.5));
         }
 
         .timeline-date {
@@ -189,9 +301,6 @@
             text-align: center;
             padding: 30px 0;
             margin-bottom: 50px;
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
         }
 
         .timeline-year-label {
@@ -199,21 +308,43 @@
             display: inline-block;
             background: linear-gradient(135deg, #4a6cf7, #6a89ff);
             color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
+            padding: 10px 24px;
+            border-radius: 30px;
             font-size: 16px;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+            box-shadow:
+                0 4px 15px rgba(74, 108, 247, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             z-index: 10;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .timeline-year-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 30px;
+            transition: opacity 0.3s ease;
         }
 
         .timeline-year-label:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
+            box-shadow:
+                0 6px 25px rgba(74, 108, 247, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 0 0 3px rgba(106, 137, 255, 0.2);
+        }
+
+        .timeline-year-label:hover::before {
+            opacity: 0.7;
         }
 
         .timeline-year-label::after {
@@ -222,13 +353,20 @@
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
             margin-left: 10px;
-            font-size: 14px;
-            color: #4a6cf7;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            transition: transform 0.3s ease;
+            display: inline-block;
         }
 
         .timeline-year-label.collapsed::after {
             content: '\f105';
             /* Font Awesome right arrow */
+            transform: rotate(0deg);
+        }
+
+        .timeline-year-label:not(.collapsed)::after {
+            transform: rotate(0deg);
         }
 
         @media (max-width: 768px) {
@@ -238,6 +376,7 @@
 
             .timeline-dot {
                 left: 30px;
+                transform: translateX(-50%);
             }
 
             .timeline-content {
@@ -247,9 +386,9 @@
 
             .timeline-item:nth-child(odd) .timeline-content::before,
             .timeline-item:nth-child(even) .timeline-content::before {
-                left: -8px;
-                border-left: none;
-                border-bottom: none;
+                left: -30px;
+                width: 30px;
+                background: linear-gradient(to left, transparent, rgba(74, 108, 247, 0.3));
             }
 
             .timeline-item:nth-child(odd) .timeline-content,
@@ -259,7 +398,8 @@
 
             .timeline-year-label {
                 font-size: 14px;
-                padding: 6px 16px;
+                padding: 8px 18px;
+                border-radius: 25px;
             }
         }
 

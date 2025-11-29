@@ -56,12 +56,16 @@ canonifyURLs = true
     name = "时间线"
     url = "/timeline/"
     weight = 4
-
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 5
   [[menu.main]]
     identifier = "about"
     name = "关于"
     url = "/about/"
-    weight = 5
+    weight = 6
 
 # 分页设置
 [pagination]

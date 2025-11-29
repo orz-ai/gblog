@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+
+<head>
+    {{ partial "head.html" . }}
+    <style>
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #4a6cf7, #6a89ff);
+            border-radius: 3px;
+        }
+
+        .tags-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        .tag-item:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.2);
+        }
+
+        .tag-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 24px;
+            padding: 0 6px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+        }
+
+        .tag-item:hover .tag-count {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tags-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tag-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.3s ease;
+        }
+
+        .tag-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .tag-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .tag-card-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .tag-card-count {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .tag-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tag-post-item {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            padding: 8px 0;
+            border-left: 2px solid transparent;
+            padding-left: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .tag-post-item:hover {
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            padding-left: 16px;
+        }
+
+        .view-mode {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .mode-btn {
+            padding: 8px 20px;
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .mode-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .tags-list {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {{ partial "header.html" . }}
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1>标签云</h1>
+                <p>{{ len .Site.Taxonomies.tags }} 个标签 · {{ len .Site.RegularPages }} 篇文章</p>
+            </div>
+
+            <div class="tags-container">
+                <div class="tags-cloud">
+                    {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+                    <a href='{{ "tags/" | relLangURL }}{{ $name | urlize }}/' class="tag-item">
+                        <span>{{ $name }}</span>
+                        <span class="tag-count">{{ len $taxonomy }}</span>
+                    </a>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {{ partial "footer.html" . }}
+
+    <a href="#" class="back-to-top" id="backToTop" aria-label="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var backToTop = document.getElementById('backToTop');
+
+            window.addEventListener('scroll', function () {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('show');
+                } else {
+                    backToTop.classList.remove('show');
+                }
+            });
+
+            backToTop.addEventListener('click', function (e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>

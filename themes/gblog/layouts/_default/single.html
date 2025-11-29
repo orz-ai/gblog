@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode }}">
+
 <head>
     {{ partial "head.html" . }}
 </head>
+
 <body>
     {{ partial "header.html" . }}
     <main class="main">
@@ -11,43 +13,103 @@
                 <header class="post-header">
                     <h1 class="post-title">{{ .Title }}</h1>
                     <div class="post-meta">
-                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                        <time datetime="{{ .Date.Format " 2006-01-02T15:04:05Z07:00" }}">
                             {{ .Date.Format .Site.Params.dateFormat }}
                         </time>
-                        
+
                         {{ with .Params.categories }}
                         <span class="post-category">
                             <i class="fas fa-folder"></i>
                             {{ range first 1 . }}
-                            <a href="{{ "categories/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+                            <a href="{{ " categories/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
                             {{ end }}
                         </span>
                         {{ end }}
-                        
+
                         {{ if isset .Params "author" }}
                         <span class="post-author">
                             <i class="fas fa-user"></i> {{ .Params.author }}
                         </span>
                         {{ end }}
-                        
+
                         <span class="post-reading-time">
                             <i class="fas fa-clock"></i> {{ .ReadingTime }} 分钟阅读
                         </span>
                     </div>
-                    
+
                     {{ with .Params.tags }}
                     <div class="post-tags">
                         {{ range . }}
-                        <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
+                        <a href='{{ "tags/" | relLangURL }}{{ . | urlize }}/' class="tag">{{ . }}</a>
                         {{ end }}
                     </div>
                     {{ end }}
                 </header>
-                
+
                 <div class="post-content">
                     {{ .Content }}
+
+                    <div class="content-end">
+                        <div class="end-line"></div>
+                        <div class="end-text">— END —</div>
+                    </div>
                 </div>
-                
+
+                <div class="post-extra">
+                    {{ if .Params.tags }}
+                    <div class="extra-section">
+                        <div class="extra-title">相关标签</div>
+                        <div class="tags-list">
+                            {{ range .Params.tags }}
+                            <a href='{{ "tags/" | relLangURL }}{{ . | urlize }}/' class="tag-link">{{ . }}</a>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <div class="extra-section">
+                        <div class="extra-title">推荐阅读</div>
+                        <div class="recommend-grid">
+                            {{ $related := .Site.RegularPages.Related . | first 4 }}
+                            {{ if $related }}
+                            {{ range $related }}
+                            <a href="{{ .Permalink }}" class="recommend-card">
+                                <div class="recommend-image">
+                                    {{ if .Params.featuredImage }}
+                                    <img src="{{ .Params.featuredImage }}" alt="{{ .Title }}">
+                                    {{ else }}
+                                    <div class="recommend-placeholder"></div>
+                                    {{ end }}
+                                </div>
+                                <div class="recommend-info">
+                                    <div class="recommend-title">{{ .Title }}</div>
+                                    <div class="recommend-date">{{ .Date.Format "2006-01-02" }}</div>
+                                </div>
+                            </a>
+                            {{ end }}
+                            {{ else }}
+                            {{ range first 4 (where .Site.RegularPages "Section" .Section) }}
+                            {{ if ne .Permalink $.Permalink }}
+                            <a href="{{ .Permalink }}" class="recommend-card">
+                                <div class="recommend-image">
+                                    {{ if .Params.featuredImage }}
+                                    <img src="{{ .Params.featuredImage }}" alt="{{ .Title }}">
+                                    {{ else }}
+                                    <div class="recommend-placeholder"></div>
+                                    {{ end }}
+                                </div>
+                                <div class="recommend-info">
+                                    <div class="recommend-title">{{ .Title }}</div>
+                                    <div class="recommend-date">{{ .Date.Format "2006-01-02" }}</div>
+                                </div>
+                            </a>
+                            {{ end }}
+                            {{ end }}
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="post-footer">
                     <div class="post-nav">
                         {{ with .PrevInSection }}
@@ -56,7 +118,7 @@
                             <span>{{ .Title }}</span>
                         </a>
                         {{ end }}
-                        
+
                         {{ with .NextInSection }}
                         <a href="{{ .Permalink }}" class="post-nav-next">
                             <span>{{ .Title }}</span>
@@ -66,7 +128,7 @@
                     </div>
                 </div>
             </article>
-            
+
             <!-- 文章目录 -->
             <div class="toc-container" id="tocContainer">
                 <div class="toc-header">
@@ -84,13 +146,13 @@
             </div>
         </div>
     </main>
-    
+
     {{ partial "footer.html" . }}
-    
+
     <a href="#" class="back-to-top" id="backToTop" aria-label="返回顶部">
         <i class="fas fa-arrow-up"></i>
     </a>
-    
+
     <!-- 显示目录按钮 -->
     <button class="toc-show-btn" id="tocShowBtn" title="显示目录" style="display: none;">
         <i class="fas fa-list"></i>
@@ -98,51 +160,51 @@
 
     <script>
         // 返回顶部按钮
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var backToTop = document.getElementById('backToTop');
-            
-            window.addEventListener('scroll', function() {
+
+            window.addEventListener('scroll', function () {
                 if (window.pageYOffset > 300) {
                     backToTop.classList.add('show');
                 } else {
                     backToTop.classList.remove('show');
                 }
             });
-            
-            backToTop.addEventListener('click', function(e) {
+
+            backToTop.addEventListener('click', function (e) {
                 e.preventDefault();
-                window.scrollTo({top: 0, behavior: 'smooth'});
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
-            
+
             // 增强代码块功能
-            document.querySelectorAll('.highlight').forEach(function(highlight) {
+            document.querySelectorAll('.highlight').forEach(function (highlight) {
                 // 添加复制按钮
                 if (!highlight.querySelector('.copy-button')) {
                     let copyButton = document.createElement('button');
                     copyButton.className = 'copy-button';
                     copyButton.textContent = '复制';
-                    
+
                     highlight.appendChild(copyButton);
-                    
-                    copyButton.addEventListener('click', function() {
+
+                    copyButton.addEventListener('click', function () {
                         let codeElement = highlight.querySelector('code');
                         let textToCopy = codeElement.textContent;
-                        
-                        navigator.clipboard.writeText(textToCopy).then(function() {
+
+                        navigator.clipboard.writeText(textToCopy).then(function () {
                             copyButton.textContent = '已复制!';
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 copyButton.textContent = '复制';
                             }, 2000);
-                        }).catch(function(err) {
+                        }).catch(function (err) {
                             console.error('无法复制文本: ', err);
                         });
                     });
                 }
-                
+
                 // 提取语言信息并添加为内部标签
                 let codeClass = highlight.querySelector('code').className;
                 let langMatch = codeClass.match(/language-(\w+)/);
-                
+
                 if (langMatch && langMatch[1]) {
                     let lang = langMatch[1];
                     // 删除可能已存在的语言标识
@@ -150,7 +212,7 @@
                     if (existingIndicator) {
                         existingIndicator.remove();
                     }
-                    
+
                     // 创建并添加新的语言标识在代码块内部的左上角
                     let langIndicator = document.createElement('div');
                     langIndicator.className = 'language-indicator';
@@ -158,15 +220,15 @@
                     highlight.insertBefore(langIndicator, highlight.firstChild);
                 }
             });
-            
+
             // 目录功能
             const tocContainer = document.getElementById('tocContainer');
             const tocNav = document.getElementById('tocNav');
             const tocToggle = document.getElementById('tocToggle');
             const postContent = document.querySelector('.post-content');
-            
+
             if (!postContent) return;
-            
+
             // 生成目录
             function generateTOC() {
                 const headings = postContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -174,31 +236,31 @@
                     tocContainer.style.display = 'none';
                     return;
                 }
-                
+
                 tocNav.innerHTML = '';
                 let levelStack = [];
-                
+
                 headings.forEach((heading, index) => {
                     const level = parseInt(heading.tagName.charAt(1));
                     const id = heading.id || `heading-${index}`;
                     heading.id = id;
-                    
+
                     // 处理层级
                     while (levelStack.length > 0 && levelStack[levelStack.length - 1].level >= level) {
                         levelStack.pop();
                     }
-                    
+
                     const listItem = document.createElement('li');
                     listItem.className = `toc-item toc-level-${level}`;
-                    
+
                     const link = document.createElement('a');
                     link.href = `#${id}`;
                     link.className = 'toc-link';
                     link.setAttribute('data-target', id);
                     link.innerHTML = `<span class="toc-text">${heading.textContent}</span>`;
-                    
+
                     listItem.appendChild(link);
-                    
+
                     // 添加到合适的父级
                     if (levelStack.length === 0) {
                         tocNav.appendChild(listItem);
@@ -209,12 +271,12 @@
                             subList = document.createElement('ul');
                             subList.className = 'toc-list';
                             parent.element.appendChild(subList);
-                            
+
                             // 添加点击展开/折叠功能到父级链接
                             const parentLink = parent.element.querySelector('.toc-link');
                             if (parentLink && !parentLink.classList.contains('toc-expandable')) {
                                 parentLink.classList.add('toc-expandable');
-                                parentLink.addEventListener('click', function(e) {
+                                parentLink.addEventListener('click', function (e) {
                                     if (e.target.closest('.toc-link') === this) {
                                         e.preventDefault();
                                         subList.classList.toggle('toc-collapsed');
@@ -225,49 +287,67 @@
                         }
                         subList.appendChild(listItem);
                     }
-                    
+
                     levelStack.push({ level: level, element: listItem });
                 });
             }
-            
-            // 删除不需要的addTocExpandCollapse函数
-            
+
             // 目录折叠功能
-            tocToggle.addEventListener('click', function() {
+            tocToggle.addEventListener('click', function () {
                 const isCollapsed = tocNav.style.display === 'none';
                 tocNav.style.display = isCollapsed ? 'block' : 'none';
                 tocToggle.querySelector('i').className = isCollapsed ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
                 tocContainer.classList.toggle('collapsed', !isCollapsed);
             });
-            
+
             // 滚动监听和高亮
             function updateActiveHeading() {
                 const headings = postContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 const windowHeight = window.innerHeight;
-                
+                const documentHeight = document.documentElement.scrollHeight;
+
                 let activeHeading = null;
-                
+                let closestHeading = null;
+                let closestDistance = Infinity;
+
+                // 查找距离视口中心最近的标题
                 headings.forEach(heading => {
                     const rect = heading.getBoundingClientRect();
-                    if (rect.top <= windowHeight * 0.3) {
-                        activeHeading = heading;
+                    const headingCenter = rect.top + rect.height / 2;
+                    const viewportCenter = windowHeight / 2;
+                    const distance = Math.abs(headingCenter - viewportCenter);
+
+                    // 只考虑已经滚动过的标题（在视口中心以上的）
+                    if (headingCenter <= viewportCenter && distance < closestDistance) {
+                        closestDistance = distance;
+                        closestHeading = heading;
                     }
                 });
-                
+
+                activeHeading = closestHeading;
+
+                // 如果没有找到，检查是否接近底部
+                if (!activeHeading) {
+                    const isNearBottom = (scrollTop + windowHeight) >= documentHeight - 100;
+                    if (isNearBottom && headings.length > 0) {
+                        activeHeading = headings[headings.length - 1];
+                    }
+                }
+
                 // 移除所有活动状态
                 document.querySelectorAll('.toc-link').forEach(link => {
                     link.classList.remove('active');
                     link.parentElement.classList.remove('active');
                 });
-                
+
                 // 添加当前活动状态
                 if (activeHeading) {
                     const activeLink = document.querySelector(`[data-target="${activeHeading.id}"]`);
                     if (activeLink) {
                         activeLink.classList.add('active');
                         activeLink.parentElement.classList.add('active');
-                        
+
                         // 展开父级目录
                         let parent = activeLink.parentElement.parentElement;
                         while (parent && parent.classList.contains('toc-list')) {
@@ -277,14 +357,14 @@
                     }
                 }
             }
-            
+
             // 平滑滚动到目标位置
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', function (e) {
                 if (e.target.closest('.toc-link')) {
                     e.preventDefault();
                     const targetId = e.target.closest('.toc-link').getAttribute('data-target');
                     const targetElement = document.getElementById(targetId);
-                    
+
                     if (targetElement) {
                         const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 100;
                         window.scrollTo({
@@ -294,36 +374,36 @@
                     }
                 }
             });
-            
+
             // 初始化
             generateTOC();
             updateActiveHeading();
-            
+
             // 为目录隐藏按钮添加点击事件
             const tocHideBtn = document.getElementById('tocHideBtn');
             const tocShowBtn = document.getElementById('tocShowBtn');
-            
+
             if (tocHideBtn) {
-                tocHideBtn.addEventListener('click', function() {
+                tocHideBtn.addEventListener('click', function () {
                     tocContainer.classList.add('hidden');
                     if (tocShowBtn) {
                         tocShowBtn.style.display = 'block';
                     }
                 });
             }
-            
+
             if (tocShowBtn) {
-                tocShowBtn.addEventListener('click', function() {
+                tocShowBtn.addEventListener('click', function () {
                     tocContainer.classList.remove('hidden');
                     tocShowBtn.style.display = 'none';
                 });
             }
-            
+
             // 监听滚动事件
             let ticking = false;
-            window.addEventListener('scroll', function() {
+            window.addEventListener('scroll', function () {
                 if (!ticking) {
-                    requestAnimationFrame(function() {
+                    requestAnimationFrame(function () {
                         updateActiveHeading();
                         ticking = false;
                     });
@@ -333,4 +413,5 @@
         });
     </script>
 </body>
+
 </html>
