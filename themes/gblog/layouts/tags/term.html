@@ -4,6 +4,7 @@
 <head>
     {{ partial "head.html" . }}
     <style>
+        /* 页面标题样式 */
         .page-header {
             text-align: center;
             margin-bottom: 50px;
@@ -35,6 +36,100 @@
             background: linear-gradient(to right, #4a6cf7, #6a89ff);
             border-radius: 3px;
         }
+
+        .post-title::before {
+            display: none !important;
+        }
+
+        .post-title {
+            padding-left: 0 !important;
+            margin-bottom: 5px !important;
+        }
+
+        /* 照片列表 - 使用网格布局 */
+        .posts.photos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .photo-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .photo-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .photo-link {
+            display: block;
+            position: relative;
+            padding-bottom: 100%;
+            overflow: hidden;
+        }
+
+        .photo-link img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover .photo-link img {
+            transform: scale(1.05);
+        }
+
+        .photo-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-placeholder i {
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            padding: 20px 16px 16px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-card:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-title {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .photo-date {
+            font-size: 12px;
+            opacity: 0.9;
+        }
     </style>
 </head>
 
@@ -44,27 +139,74 @@
         <div class="container">
             <div class="page-header">
                 <h1>标签: {{ .Title }}</h1>
-                <p>共 {{ len .Pages }} 篇文章</p>
+                <p>共 {{ len .Pages }} 篇内容</p>
             </div>
 
+            {{ $hasPhotos := false }}
+            {{ range .Pages }}
+            {{ if eq .Section "photos" }}
+            {{ $hasPhotos = true }}
+            {{ end }}
+            {{ end }}
+
+            {{ if $hasPhotos }}
+            <!-- 如果包含照片，使用网格布局 -->
+            <div class="posts photos-grid">
+                {{ range .Pages }}
+                <article class="photo-card">
+                    <a href="{{ .Permalink }}" class="photo-link">
+                        {{ if .Params.image }}
+                        <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" loading="lazy">
+                        {{ else }}
+                        <div class="photo-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        {{ end }}
+                        <div class="photo-overlay">
+                            <h3 class="photo-title">{{ .Title }}</h3>
+                            <time class="photo-date">{{ .Date.Format "2006-01-02" }}</time>
+                        </div>
+                    </a>
+                </article>
+                {{ end }}
+            </div>
+            {{ else }}
+            <!-- 如果只有文章，使用文章列表布局 -->
             <div class="posts">
                 {{ range .Pages }}
                 <article class="post-card">
-                    <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
-                    <div class="post-meta">
-                        <time>{{ .Date.Format .Site.Params.dateFormat }}</time>
-                        {{ with .Params.categories }}
-                        <span class="post-category">
-                            <i class="fas fa-folder"></i>
-                            {{ range first 1 . }}
-                            <a href="{{ " categories/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+                    {{ if .Params.image }}
+                    <a href="{{ .Permalink }}" class="post-image">
+                        <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" loading="lazy">
+                    </a>
+                    {{ end }}
+                    <div class="post-content">
+                        <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+                        <div class="post-meta">
+                            <time>{{ .Date.Format .Site.Params.dateFormat }}</time>
+                            {{ with .Params.categories }}
+                            <span class="post-category">
+                                <i class="fas fa-folder"></i>
+                                {{ range first 1 . }}
+                                <a href="{{ " categories/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+                                {{ end }}
+                            </span>
                             {{ end }}
-                        </span>
-                        {{ end }}
+                            {{ if .Params.tags }}
+                            <span class="post-tags-list">
+                                <i class="fas fa-tags"></i>
+                                {{ range first 2 .Params.tags }}
+                                <a href='{{ "tags/" | relLangURL }}{{ . | urlize }}/' class="post-tag">{{ . }}</a>{{ if
+                                ne (index $.Params.tags 0) . }}, {{ end }}
+                                {{ end }}
+                            </span>
+                            {{ end }}
+                        </div>
                     </div>
                 </article>
                 {{ end }}
             </div>
+            {{ end }}
 
             {{ partial "pagination.html" . }}
         </div>

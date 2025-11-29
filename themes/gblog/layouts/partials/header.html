@@ -13,8 +13,21 @@
                 </div>
                 <nav class="nav">
                     {{ range .Site.Menus.main }}
-                    <a href="{{ .URL }}" class="nav-link{{ if $.IsMenuCurrent " main" . }} active{{ end }}">{{ .Name
-                        }}</a>
+                    {{ $isActive := false }}
+                    {{ if $.IsMenuCurrent "main" . }}
+                    {{ $isActive = true }}
+                    {{ else if $.HasMenuCurrent "main" . }}
+                    {{ $isActive = true }}
+                    {{ else }}
+                    {{ $currentURL := strings.TrimSuffix "/" $.RelPermalink }}
+                    {{ $menuURL := strings.TrimSuffix "/" .URL }}
+                    {{ if eq $currentURL $menuURL }}
+                    {{ $isActive = true }}
+                    {{ else if and (ne $menuURL "") (ne $menuURL "/") (hasPrefix $currentURL $menuURL) }}
+                    {{ $isActive = true }}
+                    {{ end }}
+                    {{ end }}
+                    <a href="{{ .URL }}" class="nav-link{{ if $isActive }} active{{ end }}">{{ .Name }}</a>
                     {{ end }}
                 </nav>
             </div>

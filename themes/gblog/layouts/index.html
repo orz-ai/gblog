@@ -78,27 +78,26 @@
                             最近动态
                         </h3>
                         <div class="activity-timeline">
+                            {{ $allPages := .Site.RegularPages }}
+                            {{ $recentPages := first 3 $allPages }}
+                            {{ range $recentPages }}
                             <div class="activity-item">
                                 <div class="activity-dot"></div>
                                 <div class="activity-content">
-                                    <div class="activity-text">发布了新文章《Go语言垃圾回收机制深度解析》</div>
-                                    <div class="activity-time">2小时前</div>
+                                    <div class="activity-text">
+                                        {{ if eq .Section "posts" }}
+                                        发布了新文章《<a href="{{ .Permalink }}">{{ .Title }}</a>》
+                                        {{ else if eq .Section "photos" }}
+                                        上传了新的摄影作品《<a href="{{ .Permalink }}">{{ .Title }}</a>》
+                                        {{ else }}
+                                        更新了《<a href="{{ .Permalink }}">{{ .Title }}</a>》
+                                        {{ end }}
+                                    </div>
+                                    <div class="activity-time relative-time" data-timestamp="{{ .Date.Unix }}">{{
+                                        .Date.Format "2006-01-02" }}</div>
                                 </div>
                             </div>
-                            <div class="activity-item">
-                                <div class="activity-dot"></div>
-                                <div class="activity-content">
-                                    <div class="activity-text">更新了项目 GBlog 主题</div>
-                                    <div class="activity-time">1天前</div>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-dot"></div>
-                                <div class="activity-content">
-                                    <div class="activity-text">上传了新的摄影作品</div>
-                                    <div class="activity-time">3天前</div>
-                                </div>
-                            </div>
+                            {{ end }}
                         </div>
                     </div>
                 </div>
@@ -118,7 +117,7 @@
                                 <h3 class="post-title">
                                     <a href="{{ .Permalink }}">{{ .Title }}</a>
                                 </h3>
-                                <time class="post-date">{{ .Date.Format "01-02" }}</time>
+                                <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
                             </article>
                             {{ end }}
                         </div>
@@ -197,6 +196,45 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
+
+    // 计算相对时间
+    function updateRelativeTime() {
+        const timeElements = document.querySelectorAll('.relative-time');
+        const now = Math.floor(Date.now() / 1000);
+
+        timeElements.forEach(function (element) {
+            const timestamp = parseInt(element.getAttribute('data-timestamp'));
+            const diff = now - timestamp;
+
+            let relativeTime = '';
+            if (diff < 60) {
+                relativeTime = '刚刚';
+            } else if (diff < 3600) {
+                const minutes = Math.floor(diff / 60);
+                relativeTime = minutes + '分钟前';
+            } else if (diff < 86400) {
+                const hours = Math.floor(diff / 3600);
+                relativeTime = hours + '小时前';
+            } else if (diff < 2592000) {
+                const days = Math.floor(diff / 86400);
+                relativeTime = days + '天前';
+            } else if (diff < 31536000) {
+                const months = Math.floor(diff / 2592000);
+                relativeTime = months + '个月前';
+            } else {
+                const years = Math.floor(diff / 31536000);
+                relativeTime = years + '年前';
+            }
+
+            element.textContent = relativeTime;
+        });
+    }
+
+    // 初始化相对时间
+    updateRelativeTime();
+
+    // 每分钟更新一次
+    setInterval(updateRelativeTime, 60000);
 </script>
 </body>
 

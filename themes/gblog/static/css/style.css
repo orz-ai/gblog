@@ -175,7 +175,7 @@ a {
 
 /* 主要内容区域 */
 .main {
-    margin-top: 50px;
+    margin-top: 80px;
     min-height: calc(100vh - 180px);
     padding: 20px 0;
 }
@@ -184,12 +184,45 @@ a {
 .post-card {
     background-color: var(--bg-color);
     border-radius: 12px;
-    padding: 30px;
     margin-bottom: 30px;
     box-shadow: var(--card-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
     overflow: hidden;
+}
+
+/* 文章图片 */
+.post-image {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+}
+
+.post-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.post-card:hover .post-image img {
+    transform: scale(1.05);
+}
+
+/* 文章内容 */
+.post-content {
+    padding: 24px 30px;
+}
+
+.post-card:not(:has(.post-image)) .post-content {
+    padding: 24px 30px;
+}
+
+.post-card:not(:has(.post-image)) .post-title {
+    margin: 0 0 10px 0;
+}
+
+.post-card:not(:has(.post-image)) .post-meta {
+    margin: 0;
 }
 
 /* 确保列表页中的所有图片都适应容器宽度 */
@@ -208,7 +241,7 @@ a {
 
 
 .post-title {
-    margin: 0 0 15px;
+    margin: 0 0 10px;
     font-size: 1.8rem;
     font-family: var(--font-heading);
     font-weight: 700;
@@ -217,16 +250,11 @@ a {
 .post-title a {
     color: var(--text-color);
     text-decoration: none;
-    background-image: linear-gradient(to right, var(--primary-color), var(--primary-color));
-    background-position: 0 100%;
-    background-size: 0 2px;
-    background-repeat: no-repeat;
-    transition: background-size 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .post-title a:hover {
     color: var(--primary-color);
-    background-size: 100% 2px;
 }
 
 
@@ -348,13 +376,11 @@ a {
 .post-content {
     font-size: 1.05rem;
     line-height: 1.9;
-    padding-bottom: 10vh;
 }
 
 .post-content h2,
 .post-content h3,
 .post-content h4 {
-    margin-top: 2em;
     margin-bottom: 1em;
     font-family: var(--font-heading);
     position: relative;

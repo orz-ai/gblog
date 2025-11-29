@@ -448,10 +448,6 @@
     {{ partial "header.html" . }}
     <main class="main">
         <div class="container">
-            <div class="page-header">
-                <h1>{{ .Title }}</h1>
-                <p>{{ .Description }}</p>
-            </div>
 
             <div class="timeline-container">
                 <div class="timeline-line"></div>
@@ -488,7 +484,8 @@
 
                                 <div class="timeline-date">
                                     <i class="fas fa-calendar-alt"></i>
-                                    {{ .Date.Format "2006-01-02" }}
+                                    <span class="relative-time" data-timestamp="{{ .Date.Unix }}">{{ .Date.Format
+                                        "2006-01-02" }}</span>
                                 </div>
                             </div>
 
@@ -533,6 +530,45 @@
                     }
                 });
             });
+
+            // 计算相对时间
+            function updateRelativeTime() {
+                const timeElements = document.querySelectorAll('.relative-time');
+                const now = Math.floor(Date.now() / 1000);
+
+                timeElements.forEach(function (element) {
+                    const timestamp = parseInt(element.getAttribute('data-timestamp'));
+                    const diff = now - timestamp;
+
+                    let relativeTime = '';
+                    if (diff < 60) {
+                        relativeTime = '刚刚';
+                    } else if (diff < 3600) {
+                        const minutes = Math.floor(diff / 60);
+                        relativeTime = minutes + '分钟前';
+                    } else if (diff < 86400) {
+                        const hours = Math.floor(diff / 3600);
+                        relativeTime = hours + '小时前';
+                    } else if (diff < 2592000) {
+                        const days = Math.floor(diff / 86400);
+                        relativeTime = days + '天前';
+                    } else if (diff < 31536000) {
+                        const months = Math.floor(diff / 2592000);
+                        relativeTime = months + '个月前';
+                    } else {
+                        const years = Math.floor(diff / 31536000);
+                        relativeTime = years + '年前';
+                    }
+
+                    element.textContent = relativeTime;
+                });
+            }
+
+            // 初始化相对时间
+            updateRelativeTime();
+
+            // 每分钟更新一次
+            setInterval(updateRelativeTime, 60000);
         });
     </script>
 </body>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.LanguageCode }}">
+
 <head>
     {{ partial "head.html" . }}
     <style>
@@ -10,20 +11,20 @@
             padding-bottom: 20px;
             position: relative;
         }
-        
+
         .page-header h1 {
             font-size: 36px;
             margin-bottom: 15px;
             color: #333;
         }
-        
+
         .page-header p {
             color: #666;
             font-size: 18px;
             max-width: 700px;
             margin: 0 auto;
         }
-        
+
         .page-header::after {
             content: '';
             position: absolute;
@@ -35,7 +36,7 @@
             background: linear-gradient(to right, #2ecc71, #48e494);
             border-radius: 3px;
         }
-        
+
         /* 照片墙网格样式 */
         .photo-gallery {
             display: grid;
@@ -43,12 +44,12 @@
             grid-gap: 25px;
             margin-top: 30px;
         }
-        
+
         .photo-item {
             position: relative;
             overflow: hidden;
             border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             background: #fff;
             opacity: 0;
@@ -56,26 +57,27 @@
             animation: fadeInUp 0.6s forwards;
             animation-delay: calc(var(--animation-order) * 0.1s);
         }
-        
+
         @keyframes fadeInUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .photo-item:hover {
             transform: translateY(-15px);
-            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
         }
-        
+
         .photo-image-wrapper {
             position: relative;
             overflow: hidden;
             width: 100%;
-            padding-top: 75%; /* 4:3 宽高比 */
+            padding-top: 75%;
+            /* 4:3 宽高比 */
         }
-        
+
         .photo-item img {
             position: absolute;
             top: 0;
@@ -85,51 +87,51 @@
             object-fit: cover;
             transition: transform 0.5s ease;
         }
-        
+
         .photo-item:hover img {
             transform: scale(1.05);
         }
-        
+
         .photo-caption {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
             color: white;
             padding: 30px 20px 20px;
             transform: translateY(100%);
             transition: transform 0.3s ease;
         }
-        
+
         .photo-item:hover .photo-caption {
             transform: translateY(0);
         }
-        
+
         .photo-info {
             padding: 20px;
             background: #fff;
         }
-        
+
         .photo-title {
             margin: 0 0 10px;
             font-size: 18px;
             font-weight: 600;
             color: #333;
         }
-        
+
         .photo-date {
             display: flex;
             align-items: center;
             font-size: 14px;
             color: #666;
         }
-        
+
         .photo-date i {
             margin-right: 6px;
             color: #2ecc71;
         }
-        
+
         /* 照片标签样式 */
         .photo-tags {
             display: flex;
@@ -139,7 +141,7 @@
             margin-top: 15px;
             border-top: 1px solid #f0f0f0;
         }
-        
+
         .photo-tag {
             font-size: 12px;
             padding: 4px 10px;
@@ -149,12 +151,12 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
-        
+
         .photo-tag:hover {
             background-color: #2ecc71;
             color: white;
         }
-        
+
         /* 模态框样式 */
         .photo-modal {
             display: none;
@@ -163,29 +165,31 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 0; /* 移除内边距，防止影响箭头位置 */
+            padding: 0;
+            /* 移除内边距，防止影响箭头位置 */
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .photo-modal.active {
             display: flex;
             animation: fadeIn 0.3s forwards;
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
-        
+
         /* 导航按钮完整样式 */
         .modal-navigation {
             position: absolute;
@@ -194,14 +198,16 @@
             right: 0;
             bottom: 0;
             z-index: 5;
-            pointer-events: none; /* 整体区域不拦截事件 */
+            pointer-events: none;
+            /* 整体区域不拦截事件 */
         }
-        
-        #prevPhoto, #nextPhoto {
+
+        #prevPhoto,
+        #nextPhoto {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             border: none;
             border-radius: 50%;
             width: 50px;
@@ -214,91 +220,94 @@
             font-size: 18px;
             transition: all 0.3s ease;
             opacity: 0.8;
-            pointer-events: auto; /* 按钮可点击 */
+            pointer-events: auto;
+            /* 按钮可点击 */
             z-index: 20;
         }
-        
+
         #prevPhoto {
             left: 5%;
         }
-        
+
         #nextPhoto {
             right: 5%;
         }
-        
-        #prevPhoto:hover, #nextPhoto:hover {
+
+        #prevPhoto:hover,
+        #nextPhoto:hover {
             background: rgba(46, 204, 113, 0.9);
             opacity: 1;
             transform: translateY(-50%) scale(1.1);
         }
-        
+
         @media (max-width: 992px) {
             #prevPhoto {
                 left: 30px;
             }
-            
+
             #nextPhoto {
                 right: 30px;
             }
         }
-        
+
         .modal-content {
-            max-width: 75%; /* 减小内容宽度，为箭头留出更多空间 */
+            max-width: 75%;
+            /* 减小内容宽度，为箭头留出更多空间 */
             max-height: 80%;
             position: relative;
             opacity: 0;
             transform: scale(0.9);
             transition: all 0.3s ease;
         }
-        
+
         .modal-content img {
             max-width: 100%;
             max-height: 80vh;
             display: block;
             margin: 0 auto;
             border-radius: 5px;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
         }
-        
+
         .modal-caption {
             color: white;
             padding: 20px 0;
             text-align: center;
         }
-        
+
         .modal-caption h3 {
             font-size: 24px;
             margin: 0 0 10px;
             font-weight: 600;
         }
-        
+
         .modal-caption p {
             margin: 15px 0;
             font-size: 16px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
             line-height: 1.6;
         }
-        
+
         .modal-info {
             font-size: 14px;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
             display: flex;
             justify-content: center;
             gap: 15px;
         }
-        
+
         .modal-info span {
             display: flex;
             align-items: center;
         }
-        
+
         .modal-info i {
             margin-right: 5px;
         }
-        
+
         .close-modal {
             position: absolute;
             top: 20px;
@@ -309,7 +318,7 @@
             z-index: 1001;
             width: 40px;
             height: 40px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -317,12 +326,12 @@
             transition: all 0.3s ease;
             transform: rotate(0deg);
         }
-        
+
         .close-modal:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             transform: rotate(90deg);
         }
-        
+
         /* 过滤器 */
         .photo-filters {
             display: flex;
@@ -331,7 +340,7 @@
             gap: 10px;
             margin-bottom: 30px;
         }
-        
+
         .filter-btn {
             padding: 8px 20px;
             border: none;
@@ -342,83 +351,82 @@
             font-size: 14px;
             transition: all 0.3s ease;
         }
-        
-        .filter-btn:hover, .filter-btn.active {
+
+        .filter-btn:hover,
+        .filter-btn.active {
             background: #2ecc71;
             color: white;
         }
-        
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .photo-gallery {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 grid-gap: 15px;
             }
-            
+
             .photo-caption {
                 padding: 20px 15px 15px;
             }
-            
+
             .photo-title {
                 font-size: 16px;
             }
-            
+
             .modal-content img {
                 max-height: 70vh;
             }
-            
+
             .modal-caption h3 {
                 font-size: 20px;
             }
-            
+
             .close-modal {
                 top: 15px;
                 right: 15px;
             }
         }
-        
+
         @media (max-width: 480px) {
             .photo-gallery {
                 grid-template-columns: 1fr;
             }
-            
+
             .page-header h1 {
                 font-size: 28px;
             }
         }
-        
+
         .photo-modal.active .modal-content {
             opacity: 1;
             transform: scale(1);
         }
     </style>
 </head>
+
 <body>
     {{ partial "header.html" . }}
     <main class="main">
         <div class="container">
-            <div class="page-header">
-                <h1>{{ .Title }}</h1>
-                <p>{{ .Description }}</p>
-            </div>
-            
             <!-- 添加过滤按钮 -->
             <div class="photo-filters">
                 <button class="filter-btn active" data-filter="all">全部</button>
                 {{ $tags := slice }}
                 {{ range .Pages }}
-                    {{ range .Params.tags }}
-                        {{ $tags = $tags | append . }}
-                    {{ end }}
+                {{ range .Params.tags }}
+                {{ $tags = $tags | append . }}
+                {{ end }}
                 {{ end }}
                 {{ range ($tags | uniq) }}
-                    <button class="filter-btn" data-filter="{{ . | urlize }}">{{ . }}</button>
+                <button class="filter-btn" data-filter="{{ . | urlize }}">{{ . }}</button>
                 {{ end }}
             </div>
-            
+
             <div class="photo-gallery">
                 {{ range $index, $page := .Pages }}
-                <div class="photo-item" data-url="{{ .Permalink }}" data-tags="{{ range .Params.tags }}{{ . | urlize }} {{ end }}" style="--animation-order: {{ $index }}">
+                <div class="photo-item" data-url="{{ .Permalink }}"
+                    data-tags="{{ range .Params.tags }}{{ . | urlize }} {{ end }}"
+                    style="--animation-order: {{ $index }}">
                     <div class="photo-image-wrapper">
                         <img src="{{ .Params.image }}" alt="{{ .Title }}">
                         <div class="photo-caption">
@@ -437,7 +445,7 @@
                         {{ with .Params.tags }}
                         <div class="photo-tags">
                             {{ range . }}
-                            <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}/" class="photo-tag">{{ . }}</a>
+                            <a href="{{ " tags/" | relLangURL }}{{ . | urlize }}/" class="photo-tag">{{ . }}</a>
                             {{ end }}
                         </div>
                         {{ end }}
@@ -447,23 +455,23 @@
             </div>
         </div>
     </main>
-    
+
     {{ partial "footer.html" . }}
-    
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const photoItems = document.querySelectorAll('.photo-item');
             const filterButtons = document.querySelectorAll('.filter-btn');
-            
+
             // 过滤功能
             filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const filter = this.getAttribute('data-filter');
-                    
+
                     // 更新按钮状态
                     filterButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
-                    
+
                     // 过滤照片
                     photoItems.forEach(item => {
                         if (filter === 'all') {
@@ -479,10 +487,10 @@
                     });
                 });
             });
-            
+
             // 点击影集跳转到详情页
             photoItems.forEach((item) => {
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function () {
                     const url = item.getAttribute('data-url');
                     if (url) {
                         window.location.href = url;
@@ -492,4 +500,5 @@
         });
     </script>
 </body>
+
 </html>
