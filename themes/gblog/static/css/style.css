@@ -225,12 +225,12 @@ a {
     margin: 0;
 }
 
-/* 确保列表页中的所有图片都适应容器宽度 */
-.post-card img {
-    max-width: 100% !important;
-    height: auto !important;
-    width: auto;
-    object-fit: contain;
+/* 列表页图片样式 */
+.posts .post-card .post-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
 }
 
 .post-card:hover {

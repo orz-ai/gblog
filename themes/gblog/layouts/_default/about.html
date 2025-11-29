@@ -124,13 +124,6 @@
     {{ partial "header.html" . }}
     <main class="main">
         <div class="container">
-            <div class="page-header">
-                <h1>{{ .Title }}</h1>
-                {{ if .Description }}
-                <p>{{ .Description }}</p>
-                {{ end }}
-            </div>
-
             <div class="about-content">
                 <div class="about-intro">
                     {{ .Content }}
