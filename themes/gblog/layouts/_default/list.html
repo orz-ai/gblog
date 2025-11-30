@@ -181,7 +181,12 @@
                 <article class="post-card">
                     {{ if .Params.image }}
                     <a href="{{ .Permalink }}" class="post-image">
+                        {{ $image := .Resources.GetMatch .Params.image }}
+                        {{ if $image }}
+                        <img src="{{ $image.RelPermalink }}" alt="{{ .Title }}" loading="lazy">
+                        {{ else }}
                         <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" loading="lazy">
+                        {{ end }}
                     </a>
                     {{ end }}
                     <div class="post-content">
