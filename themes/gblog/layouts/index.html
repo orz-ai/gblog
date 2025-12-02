@@ -106,7 +106,7 @@
                         </h3>
                         <div class="activity-timeline">
                             {{ $allPages := .Site.RegularPages }}
-                            {{ $recentPages := first 3 $allPages }}
+                            {{ $recentPages := first 5 $allPages }}
                             {{ range $recentPages }}
                             <div class="activity-item">
                                 <div class="activity-dot"></div>
@@ -176,6 +176,10 @@
                             <a href="/posts/" class="nav-item">
                                 <i class="fas fa-edit"></i>
                                 <span>文章</span>
+                            </a>
+                            <a href="/series/" class="nav-item">
+                                <i class="fas fa-book"></i>
+                                <span>系列</span>
                             </a>
                             <a href="/photos/" class="nav-item">
                                 <i class="fas fa-images"></i>

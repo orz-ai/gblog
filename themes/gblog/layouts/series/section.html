@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+
+<head>
+    {{ partial "head.html" . }}
+    <style>
+        /* 列表页特殊样式 */
+        .posts .post-card {
+            display: flex;
+            gap: 30px;
+            align-items: stretch;
+            padding: 30px !important;
+        }
+
+        .posts .post-image {
+            flex-shrink: 0;
+            width: 320px;
+            height: 220px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: block;
+        }
+
+        .posts .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .posts .post-content {
+            flex: 1;
+            padding: 0 !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .posts .post-title {
+            font-size: 1.5rem !important;
+            margin: 0 0 14px 0 !important;
+            padding: 0 !important;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .posts .post-title::before {
+            display: none !important;
+        }
+
+        .posts .post-title a {
+            background: none !important;
+            padding: 0 !important;
+        }
+
+        .posts .post-summary {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 0 0 20px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .posts .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: #999;
+            margin: 0;
+        }
+
+        .posts .post-meta time {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .posts .post-meta time::before {
+            content: '\f017';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 400;
+        }
+
+        .posts .post-category,
+        .posts .post-tags-list {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .posts .post-category a,
+        .posts .post-tag {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .posts .post-category a:hover,
+        .posts .post-tag:hover {
+            opacity: 0.7;
+        }
+
+        /* 没有图片的卡片 */
+        .posts .post-card:not(:has(.post-image)) {
+            padding: 30px !important;
+        }
+
+        .posts .post-card:not(:has(.post-image)) .post-title {
+            font-size: 1.6rem !important;
+        }
+
+        .posts .post-card:not(:has(.post-image)) .post-summary {
+            -webkit-line-clamp: 3;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .posts .post-card {
+                flex-direction: column;
+                padding: 20px !important;
+            }
+
+            .posts .post-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .posts .post-summary {
+                -webkit-line-clamp: 3;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {{ partial "header.html" . }}
+    <main class="main">
+        <div class="container">
+            <div class="posts">
+                {{ $pages := .Pages.ByWeight }}
+                {{ range $pages }}
+                <article class="post-card">
+                    {{ if .Params.image }}
+                    <a href="{{ .Permalink }}" class="post-image">
+                        {{ $image := .Resources.GetMatch .Params.image }}
+                        {{ if $image }}
+                        <img src="{{ $image.RelPermalink }}" alt="{{ .Title }}" loading="lazy">
+                        {{ else }}
+                        <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" loading="lazy">
+                        {{ end }}
+                    </a>
+                    {{ end }}
+                    <div class="post-content">
+                        <div>
+                            <h2 class="post-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+                            {{ if .Summary }}
+                            <p class="post-summary">{{ .Summary }}</p>
+                            {{ end }}
+                        </div>
+                        <div class="post-meta">
+                            <time>{{ .Date.Format .Site.Params.dateFormat }}</time>
+                            {{ with .Params.categories }}
+                            <span class="post-category">
+                                <i class="fas fa-folder"></i>
+                                {{ range first 1 . }}
+                                <a href="{{ " categories/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+                                {{ end }}
+                            </span>
+                            {{ end }}
+                            {{ if .Params.tags }}
+                            <span class="post-tags-list">
+                                <i class="fas fa-tags"></i>
+                                {{ range first 3 .Params.tags }}
+                                <a href='{{ "tags/" | relLangURL }}{{ . | urlize }}/' class="post-tag">{{ . }}</a>{{ end
+                                }}
+                            </span>
+                            {{ end }}
+                        </div>
+                    </div>
+                </article>
+                {{ end }}
+            </div>
+        </div>
+    </main>
+
+    {{ partial "footer.html" . }}
+
+    <a href="#" class="back-to-top" id="backToTop" aria-label="返回顶部">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var backToTop = document.getElementById('backToTop');
+
+            window.addEventListener('scroll', function () {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('show');
+                } else {
+                    backToTop.classList.remove('show');
+                }
+            });
+
+            backToTop.addEventListener('click', function (e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+
+</html>
