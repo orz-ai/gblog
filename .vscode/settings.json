@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.html": "html"
+    },
+    "[html]": {
+        "editor.formatOnSave": false
+    },
+    "html.format.wrapLineLength": 0,
+    "html.format.wrapAttributes": "preserve"
+}
